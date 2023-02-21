@@ -38,5 +38,7 @@
     "webpack-dev-middleware": "^6.0.1",
     "webpack-hot-middleware": "^2.25.3",
     "webpack-node-externals": "^3.0.0"
-  }
+  },
+  "node":"16.14.0",
+  "npm":"8.3.1"
 }
