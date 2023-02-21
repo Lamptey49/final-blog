@@ -30,7 +30,9 @@ app.use('/', blogRoutes)
 app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR,
      'dist')))
 
-
+app.use('*', (req, res)=> {
+    res.sendFile(path.join(CURRENT_WORKING_DIR, 'scopaf-blog/public/index.html'))
+})
 
 
 app.use((err, req, res, next)=>{
