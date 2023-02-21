@@ -3,7 +3,7 @@ import extend from 'lodash/extend'
 import errorHandler from '../helpers/dbErrorHandler'
 import formidable from 'formidable'
 import fs from 'fs'
-import profileImage from './../../scopaf-blog/public/logo512.png'
+import profileImage from './../../dist/uploads/user-logo.jpg'
 const userCtrl = {
       create : async(req, res) => {
           const user = new User(req.body)
