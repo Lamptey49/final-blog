@@ -1,5 +1,5 @@
 const config = {
-    env: process.env.NODE_ENV || 'development',
+    env: process.env.PORT || 'development',
     port: process.env.PORT || 4000,
     jwtSecret: process.env.JWT_SECRET || "gdjh47rniof87gfjdnHJTUGNDIRNE04UFNew4r7fnmbHI8rj0hygf",
     //  mongoUri: 'mongodb://localhost:27017/scopaf_blog-db'
