@@ -2,44 +2,34 @@ import Blog from '../models/BlogModel'
 import extend from 'lodash'
 import errorHandler from '../helpers/dbErrorHandler'
 import fs from 'fs'
-import {IncomingForm} from 'formidable'
+import formidable from 'formidable'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const blogCtrl = {
     create: async(req, res)=>{
        
-        let form = new IncomingForm()
+        let form = new formidable.IncomingForm()
 
         form.keepExtensions = true 
         
         form.parse(req, (err, fields, files)=>{
-            if(err){
-                return res.status(400).json({
-                    error:'Photo could not be uploaded'
-                })
-            }
+            let oldPath = files.image.filepath
+            let newPath = path.join(__dirname, '../../dist/uploads/' + files.image.name)
+            let rawData = fs.readFileSync(oldPath)
+           
             let blog = new Blog(fields)
-            let oldPath = files.image.path 
-            let newPath = `../../dist/uploads/${files.image.name}`
-            fs.rename(oldPath, newPath, (err) => {
+           
+            blog.user = req.profile 
+            fs.writeFile(newPath, rawData, ()=>{
                 if(err){
                     return res.status(400).json({
-                        status:'Failure',
-                        msg:'Faled to upload'+err.message
+                        error: errorHandler.getErrorMessage(err)
                     })
                 }
-                res.status(201).json({
-                    msg:'Failed uploaded successfully'
-                })
             })
-            blog.user = req.profile 
-            if(files.image){
-                blog.image.data = fs.readFileSync(files.image.buffer)
-                blog.image.contentType = files.image.type 
-            }
             try{
-                 blog.save((err, result)=>{
+                 blog.save((result)=>{
                     if(err)
                         return res.status(400).json({
                             error:errorHandler.getErrorMessage(err)
