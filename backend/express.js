@@ -14,9 +14,9 @@ import Template from '../client/public/template'
 import ReactDOMServer from 'react-dom/server'
 import {StaticRouter} from 'react-router-dom/server'
 
-import devBundle from  './devBundle'
+// import devBundle from  './devBundle'
 const app  = express()
-devBundle.compile(app)
+// devBundle.compile(app)
 
 const CURRENT_WORKING_DIR = process.cwd()
 app.use(bodyParser.json())
