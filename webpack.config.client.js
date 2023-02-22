@@ -1,37 +1,36 @@
 const path = require('path')
-const nodeExternals = require('webpack-node-externals')
+const webpack = require('webpack')
 const CURRENT_WORKING_DIR = process.cwd()
 
 const config = {
-    name: "backend",
-    entry: [ path.join(CURRENT_WORKING_DIR , './backend/server.js') ],
-    target: "node",
-    output: {
-        path: path.join(CURRENT_WORKING_DIR , '/dist/'),
-        filename: "server.generated.js",
-        publicPath: '/dist/',
-        libraryTarget: "commonjs2"
+    name: "browser",
+    mode: "development",
+    devtool: 'eval-source-map',
+    devServer:{
+        hot:true
     },
-    experiments: {
-        topLevelAwait: true
-      },
-    externals: [nodeExternals()],
+    entry: [
+        'webpack-hot-middleware/client?reload=true',
+        path.join(CURRENT_WORKING_DIR, 'client/src/index.js'),
+        // 'react-hot-loader/patch', path.join(CURRENT_WORKING_DIR, 'client/App.js')
+    ],
+    output: {
+        path: path.join(CURRENT_WORKING_DIR , '/dist'),
+        filename: 'bundle.js',
+        publicPath: '/dist/'
+    },
     module: {
         noParse:/node_modules\/react-quill\/dist/,
-            
-            // {test:/\.js$/, exclude:/node_modules/, loaders:['babel']},
-            // {test:/\.css$/, exclude:/node_modules/, loaders:['babel']}
-        
+           
         rules: [
             {
-                loader:'babel-loader',
-                test: /\.js$|.jsx$|.ts$/,
+                test: /\.jsx?$|.js?$|.ts?$|.tsx?$/,
                 exclude: /node_modules/,
+                use: ['babel-loader']
                 
             },
             {
-                
-                test: /\.(ttf|eot|svg|gif|jpg|png|woff2|woff|ico|json|webmanifest|)(\?[\s\S]+)?$/,
+                test: /\.(ttf|eot|svg|gif|jpg|png|woff2|woff)(\?[\s\S]+)?$/,
                 use: 'file-loader'
             },
             {
@@ -48,7 +47,7 @@ const config = {
             },
             {
                 test: /\.scss$/i,
-                
+
                 use: [
                 // Creates `style` nodes from JS strings
                 "style-loader",
@@ -57,14 +56,16 @@ const config = {
                 // Compiles Sass to CSS
                 "sass-loader",
             ],
-            
         }
-           
-           
         ]
-    },
-    resolve: {
-        extensions: [".tsx", ".ts", ".js", "jsx", "scss" ,'.css']
+    },  plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+          new webpack.NoEmitOnErrorsPlugin(),
+         
+      ].filter(Boolean),
+      resolve: {
+        
+        extensions: [".tsx", ".ts", ".js", ".jsx", ".scss", '.css']
     },
     
 }

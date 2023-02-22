@@ -1,5 +1,5 @@
 import Blog from '../models/BlogModel'
-import extend from 'lodash'
+import extend, { truncate } from 'lodash'
 import errorHandler from '../helpers/dbErrorHandler'
 import fs from 'fs'
 import formidable from 'formidable'
@@ -9,26 +9,31 @@ import { fileURLToPath } from 'url'
 const blogCtrl = {
     create: async(req, res)=>{
        
-        let form = new formidable.IncomingForm()
+        let form =  formidable({ multiples: true})
 
         form.keepExtensions = true 
         
         form.parse(req, (err, fields, files)=>{
-            let oldPath = files.image.filepath
-            let newPath = path.join(__dirname, '../../dist/uploads/' + files.image.name)
-            let rawData = fs.readFileSync(oldPath)
-           
-            let blog = new Blog(fields)
+            
+            let blog = Blog(fields)
            
             blog.user = req.profile 
-            fs.writeFile(newPath, rawData, ()=>{
-                if(err){
-                    return res.status(400).json({
-                        error: errorHandler.getErrorMessage(err)
-                    })
-                }
-            })
-            try{
+            if(files.image){
+                let oldPath = files.image.filepath
+                let newPath = path.join(__dirname, '../../dist/uploads/' + files.image.name)
+                let rawData = fs.readFileSync(oldPath, 'utf-8')
+                
+                // fs.writeFile(newPath, rawData, ()=>{
+                //     if(err){
+                //         return res.status(400).json({
+                //             error: 'Could not add image'
+                //         })
+                //     }
+                // })
+                blog.image.data = fs.readFileSync(oldPath)
+                blog.image.contentType = files.image.type
+            }
+           
                  blog.save((result)=>{
                     if(err)
                         return res.status(400).json({
@@ -36,11 +41,7 @@ const blogCtrl = {
                     })
                     res.status(200).json(result)
                 })
-            } catch(err){
-                return res.stats(400).json({
-                    error:errorHandler.getErrorMessage(err)
-                })
-            }
+           
         })
      
     },
@@ -80,8 +81,8 @@ const blogCtrl = {
     },
     listRelated: async(req, res)=>{
         try {
-            let blogs =await Blog.find({"_id":req.blog }, {"category":req.blog.category})
-                        .limit(5).populate('blog', '_id title').exec()
+            let blogs =await Blog.find({})
+                        .limit(5).populate('blog', '_id title image categories tags createdAt').exec()
             res.json(blogs)
         } catch (err) {
             return res.status(400).json({
