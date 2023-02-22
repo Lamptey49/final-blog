@@ -17,7 +17,7 @@ const config = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                use: 'babel-lader'
+                use: 'babel-loader'
             },
             {
                 test: /\.(ttf|eot|svg|gif|jpg|png|woff2|woff)(\?[\s\S]+)?$/,
