@@ -1,13 +1,11 @@
 import axios from 'axios'
 const signin = async(user) => {
     try {
-        let response = await axios.post('/auth/signin', {
+        let response = await fetch('/auth/signin', {
             method:'POST',
-            mode:'cors',
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                
             },
             
             body:JSON.stringify(user)

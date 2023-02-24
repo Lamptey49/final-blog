@@ -12,32 +12,35 @@ import { signin } from '../../auth/api-auth'
 export default function Signin(props) {
 
     
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+    const [redirectToReferer, setRedirectToReferer] = useState(false)
+    // const [values, setValues] = useState({
+    //     email:'',
+    //     password:'',
+    //     error:'',
+    //     redirectToReferer: false
+    // })
     
-    const [values, setValues] = useState({
-        email:'',
-        password:'',
-        error:'',
-        redirectToReferer: false
-    })
-    const handleChange =  event => {
-      const value =  event.target.value 
-      setValues({  value:value})
-    }
     // const { setAuth } = useContext(AuthContext)
     const navigate = useNavigate()
 
     const clickSubmit = async(e) => {
       e.preventDefault()
       const user = {
-        email: values.email || undefined,
-        password:values.password || undefined
+        email: email || undefined,
+        password: password || undefined
       }
       signin(user).then((data) => {
         if(data && data.error){
-            setValues({ ...values, error: data.error})
+            setError('')
         } else {
             auth.authenticate(data, () => {
-                setValues({ ...values, error: '', redirectToReferer: true})
+                setEmail('')
+                setPassword('')
+                setError('')
+                setRedirectToReferer(true)
             })
         }
       })
@@ -48,8 +51,8 @@ export default function Signin(props) {
             pathname: '/admin'
         }
     }
-    const { redirectToReferer } = values 
-    if(redirectToReferer){
+    
+    if(redirectToReferer === true){
         navigate(from)
     }
     const gotoRegister = () => navigate('/user/signup')
@@ -64,8 +67,8 @@ export default function Signin(props) {
           <h2 className="text-center">Sign In </h2>
           <form className='login__form' onSubmit={clickSubmit}>
             <input
-                value={values.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e) =>setEmail(e.target.value)}
                 type="email"
                 className="form-control"
                 placeholder="Type your email"
@@ -75,8 +78,8 @@ export default function Signin(props) {
             <br />
       
             <input
-                value={values.password}
-                onChange={handleChange}
+                value={password}
+                onChange={(e) =>setPassword(e.target.value)}
                 type="password"
                 className="form-control"
                 placeholder="Type your password"

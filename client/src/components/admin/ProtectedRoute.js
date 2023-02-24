@@ -1,9 +1,27 @@
-import React from "react";
-import {  Navigate } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {   useNavigate } from "react-router-dom";
 import auth from "../../auth/auth-helper";
-function ProtectedRoute(Component) {
+function ProtectedRoute(props) {
 
-    return auth.isAuthenticated() ? <Component /> :  <Navigate to='/auth/signin' />
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const navigate = useNavigate()
+  const checkUserToken = () => {
+    if(!auth.isAuthenticated()){
+      setIsLoggedIn(false)
+      navigate('/auth/signin')
+    } else{
+      setIsLoggedIn(true)
+    }
+  }
+  useEffect(() => {
+    checkUserToken()
+  }, [isLoggedIn])
+
+    return (
+    <React.Fragment>
+      {  isLoggedIn ? props.children :  navigate('/auth/signin')}
+    </React.Fragment>
+      )
   }
   
   export default ProtectedRoute;

@@ -1,23 +1,36 @@
-import React from 'react'
-// import auth from '../../auth/auth-helper'
-import Header from './Header/Header'
+import React, {useEffect, useState} from 'react'
+import auth from '../../auth/auth-helper'
+// import Header from './Header/Header'
 import Sidebar from './Sidebar/Sidebar'
 // import CreateBlog from './blog/CreateBlog'
 import sidebar_menu from './constants/sidebar-menu'
-// import Admin from './Admin'
 
 
-export default function Dashboard() {
+export default function Dashboard({children}) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  
+  const checkUserToken = () => {
+    if(!auth.isAuthenticated()){
+      setIsLoggedIn(false)
+      
+    } else{
+      setIsLoggedIn(true)
+    }
+  }
+  useEffect(() => {
+    checkUserToken()
+  }, [isLoggedIn])
+
   return (
-    <>
-    {/* <Admin /> */}
+    <React.Fragment>
+ 
     <div className='dashboard-container'>
-      <Sidebar  menu={sidebar_menu}/>
+        <Sidebar  menu={sidebar_menu}/>
       <div className='dashboard-body'>
-        <Header btnText='Dashboard' />
+        {children}
       </div>
     </div>
-    </>
+    </React.Fragment>
     
   )
 }

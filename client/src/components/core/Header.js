@@ -5,13 +5,13 @@ function Header() {
   return ( 
 <div className="navbar">
   <div className="container flex">
-      <p className='logo'>
+      <a className='logo' href='/'>
         <img src={logo} alt='scopaf' />
         {/* ScopAf */}
-      </p>
+      </a>
     <nav>
         <ul>
-            <li><a href="/">Contact</a></li>
+            <li><a href="/contact">Contact</a></li>
         </ul>
     </nav>
   </div>

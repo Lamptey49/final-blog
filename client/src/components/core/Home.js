@@ -35,7 +35,7 @@ export default function Home() {
         <div className="container grid">
             <div className="showcase-text">
                 <h1>We Build what you ask for</h1>
-                <p>At PhineSoft Tech, We make our customers our number one priority, We deliver what they ask for. Try us now!</p>
+                <p>At ScopAf , We make our customers our number one priority, We deliver what they ask for. Try us now!</p>
                 {/* <a href="features.html" className="btn btn-outline">Read More</a> */}
             </div>
             <div className="showcase-form card">
@@ -44,25 +44,17 @@ export default function Home() {
             </div>
         </div>
       </section>
-      
       <section className="stats">
           <div className="container">
               <h3 className="stats-heading text-center my-1">
-                  Welcome to the best platform for building applications of all types with modern architecture and scaling
+                  Welcome to the best platform for all your local goods of all types with modern architecture and scaling
+                  from top manufacturers from all sectors
               </h3>
-
               <div className="grid grid-3 text-center my-4">
-                  <div>
-                   <Blog />
-                  </div>
-
-                <div>
-                  {/* <RelatedBlog /> */}
-                </div>
+                   <Blog />  
               </div>
           </div>
       </section>
-    
       <Footer />
     </div>
   )

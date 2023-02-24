@@ -3,26 +3,24 @@ import auth from '../../../auth/auth-helper'
 import { create } from './api-blog'
 import { Navigate } from 'react-router'
 import Header from '../Header/Header'
-import CustomToolbar from '../Editor/CustomToolbbar.jsx'
-// import 'react-quill/dist/quill.snow.css'
-// import SideBar from '../Sidebar/Sidebar'
-// import sidebar_menu from '../constants/sidebar-menu'
-// import {ImageResize} from 'quill-image-resize-module-react'
-// Quill.register('modules/imageResize', ImageResize)
-// const ReactQuill = require('react-quill').default
+import ReactQuill from 'react-quill'
+import CustomToolbar from '../Editor/CustomToolbar.js'
+import 'react-quill/dist/quill.snow.css'
+import SideBar from '../Sidebar/Sidebar'
+import sidebar_menu from '../constants/sidebar-menu'
+
 export default function CreateBlog() {
-    const [values, setValues] = useState({
-        error:'',
-        sizeError:'',
-        success:'',
-        title:'',
-        slug:'',
-        image:'',
-        categories:'',
-        tags:'',
-        redirect:false,
-    })
+    
+    const [title, setTitle] = useState('')
+    const [slug, setSlug] = useState('')
+    const [categories, setCategories] = useState('')
+    const [tags, setTags] = useState('')
+    const [redirect, setRedirect] = useState(false)
     const [body, setBody] = useState('')
+    const [success, setSuccess] = useState('')
+    const [error, setError] = useState('')
+    const [image, setImage] = useState('')
+
     const modules ={ toolbar :{
         container:'#toolbar'
     }
@@ -40,73 +38,67 @@ export default function CreateBlog() {
     const clickSubmit = () => {
         const jwt = auth.isAuthenticated()
         let blogData = new FormData()
-        values.title = blogData.append('title', values.title)
-        values.categories = blogData.append('categories', values.categories)
-        values.body = blogData.append('body', values.body)
-        values.tags = blogData.append('tags', values.tags)
-        values.image = blogData.append('image', values.image)
-        values.slug = blogData.append('slug', values.slug)
+        title = blogData.append('title',title)
+        categories = blogData.append('categories', categories)
+        body = blogData.append('body', body)
+        tags = blogData.append('tags', tags)
+        image = blogData.append('image', image)
+        slug = blogData.append('slug', slug)
         create(jwt.user._id, blogData).then((data) =>{
             if(data && data.error){
-                setValues({...values, error: data.error })
+                setError(data.error)
             } else{
-                setValues({...values, error: '', redirect: true})
+                setTitle('')
+                setSlug('')
+                setBody('')
+                setImage('')
+                setCategories('')
+                setTags('')
+                setSuccess('')
+                setRedirect(true)
             }
         })
+        console.log(blogData)
     }
 
-    if(values.redirect){
+    if(redirect){
         return (<Navigate to={'/admin'} />)
     }
 
-    const handleChange = name => event => {
-        const value = name === 'image' ? event.target.files[0] : event.target.value 
-        setValues({...values, [name]: value})
-        
-    }
-    const bodyChange = (body) =>{
-        setBody(body)
-        
-    }
+ 
     return (
         <>
-            <div className='dashboard-container'>
-                <div className='dashboard-content'>
-                {/* <SideBar menu={sidebar_menu} /> */}
-                <Header  btnText='Create New Blog'  />
+            <div className='dashboard-content'>
+                <Header  />
+               
                 <div className='dashboard-content-container'>
+                <div className='dashboard-content-header'>
+                        <h2 className='text-center'>Create Blog</h2>
+                </div>
                     <form>
-                        <h2 className='text-center'>Create New Blog</h2>
                         <div className='form-group'>
-                            <input id='title' className='form-control me-2' placeholder='Title' onChange={handleChange('title')} value={values.title} /> 
+                            <input id='title' className='form-control me-2' placeholder='Title' onChange={(e) => setTitle(e.target.value)} value={title} /> 
                         </div>
                     <br />
                     <div className='form-group'>
 
-                        <input id='slug' className='form-control' placeholder='Slug' onChange={handleChange('slug')} value={values.slug}  />
+                        <input id='slug' className='form-control' placeholder='Slug' onChange={(e) => setSlug(e.target.value)} value={slug}  />
                     </div>
                     <br />
-                    <input id='category' className='form-control' placeholder='Category' onChange={handleChange('categories')} value={values.categories}   />
+                    <input id='category' className='form-control' placeholder='Category' onChange={(e) =>setCategories(e.target.value)} value={categories}   />
                     <br />
-                    <input id='tag' className='form-control' placeholder='Tag' onChange={handleChange('tags')} />
+                    <input id='tag' className='form-control' placeholder='Tag' onChange={(e)=>setTags(e.target.value)} value={tags} />
                     <br />
                     <label htmlFor='icon-button-file' style={{color:'red'}}>
                             Add Featured Image 
                     </label>
                     <br />
-                    <input accept='image/*'  className='form-control' onChange={handleChange('image')} id='icon-button-file'  type='file'  />
+                    <input accept='image/*'  className='form-control' onChange={(e) => setImage(e.target.files[0].name)} id='icon-button-file'  type='file'  />
                     <br />
-                {/* { typeof window !== 'undefined' && ReactQuill ? (
-
                     <div>
-                        <CustomToolbar />
-                        <ReactQuill value={body}
-                        onChange={bodyChange}
-                        formats={formats}
-                        modules={modules} 
-                        />
+                        <CustomToolbar/>
+                        <ReactQuill theme="snow" value={body} onChange={setBody} formats={formats} modules={modules} />
                     </div>
-                ) : <textarea />} */}
                     <br />
                     
                     <div className='form-group'>
@@ -114,7 +106,7 @@ export default function CreateBlog() {
                     </div>
                         &nbsp;&nbsp;
                     </form>
-                </div>
+                
                 </div>
             </div>
         </>

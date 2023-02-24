@@ -5,7 +5,7 @@ import fs from 'fs'
 import formidable from 'formidable'
 import path from 'path'
 import { fileURLToPath } from 'url'
-
+import multer from 'multer'
 const blogCtrl = {
     create: async(req, res)=>{
        
@@ -16,12 +16,21 @@ const blogCtrl = {
         form.parse(req, (err, fields, files)=>{
             
             let blog = Blog(fields)
-           
+           var storage = multer.diskStorage({
+            destination: function(req, file, cb){
+                cb(null, 'uploads')
+            }, 
+            filename: function(req, file, cb){
+                cb(null, file.fieldname +'-'+Date.now())
+            }
+           })
+           var upload = multer({ storage: storage})
+
             blog.user = req.profile 
             if(files.image){
-                let oldPath = files.image.filepath
-                let newPath = path.join(__dirname, '../../dist/uploads/' + files.image.name)
-                let rawData = fs.readFileSync(oldPath, 'utf-8')
+                // let oldPath = files.image.filepath
+                // let newPath = path.join(__dirname, '../../dist/uploads/' + files.image.name)
+                // let rawData = fs.readFileSync(oldPath, 'utf-8')
                 
                 // fs.writeFile(newPath, rawData, ()=>{
                 //     if(err){
@@ -30,8 +39,13 @@ const blogCtrl = {
                 //         })
                 //     }
                 // })
-                blog.image.data = fs.readFileSync(oldPath)
-                blog.image.contentType = files.image.type
+                var img = fs.readFileSync(files.image.filepath)
+                var encode_img = img.toString('base64')
+                
+                 blog.image.data = new Buffer.from(encode_img, 'base64')
+                 blog.image.contentType = files.image.mimeType
+                
+
             }
            
                  blog.save((result)=>{

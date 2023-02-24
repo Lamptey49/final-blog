@@ -19,8 +19,8 @@ const sidebar_menu = [
     {
         id: 3,
         icon: ShippingIcon,
-        path: '/admin/orders',
-        title: 'Products',
+        path: '/admin/blogs',
+        title: 'Blogs',
     },
     {
         id: 4,

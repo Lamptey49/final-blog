@@ -37,8 +37,8 @@ const read = async( params, signal) => {
             method:'GET',
             headers:{
                 'Accept':'Content-Type',
-                signal:signal
-            }
+            },
+            signal:signal
         })
         return response.json()
     }
@@ -51,16 +51,47 @@ const read = async( params, signal) => {
 const listBlogs = async(signal) => {
     await fetch('/api/blogs/by', {
         method:'GET',
-        headers:{
-            'Accept':'Content-Type'
-        }
+        
     }).then(response => {
         return response.json()
     })
+}
+
+const update = async(params, credentials, blog) => {
+    try {
+        let response = await fetch('/api/blog/'+params.blogId,{
+            method:'PUT',
+            headers:{
+                'Accept':'application/json',
+                'Authorization':'Bearer '+credentials.t
+            },
+            body:blog
+        })
+        return response.json()
+    } catch (err) {
+        console.log(err)
+    }
+}
+const remove = async(params, credentials)=>{
+    try {
+        let response = await fetch('/api/blog/'+params.blogId, {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + credentials.t
+          }
+        })
+        return response.json()
+      } catch(err) {
+        console.log(err)
+      }
 }
 export {
     create,
     list,
     read,
+    update,
+    remove,
     listBlogs
 }

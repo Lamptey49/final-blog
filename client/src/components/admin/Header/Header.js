@@ -1,25 +1,31 @@
 import React from 'react';
-
-
-import NotificationIcon from '../../../assets/icons/notification.svg';
-import SettingsIcon from '../../../assets/icons/settings.svg';
-
-function Header () {
+import auth from '../../../auth/auth-helper'
+import profileImage from '../../../assets/images/profile-pic.jpg'
+import logo from '../../../assets/images/logo.png'
+import { Navigate} from 'react-router-dom';
+const Header = ()=> {
+   
     return(
-        <div className='dashbord-header-container'>
-           
-
-            <div className='dashbord-header-right'>
-                <img 
-                    src={NotificationIcon}
-                    alt='notification-icon'
-                    className='dashbord-header-icon' />
-                <img 
-                    src={SettingsIcon}
-                    alt='settings-icon'
-                    className='dashbord-header-icon' />
-                <img className='dashbord-header-avatar' alt=''
-                    src='https://reqres.in/img/faces/9-image.jpg' />
+        <div className='navbar'>
+            <div className='container flex'>
+                <p className='logo'>
+                <img src={logo} alt='scopaf' />
+                </p>
+                <nav>
+                    <ul>
+                       
+                        <p style={{color:'whitesmoke'}}>{auth.isAuthenticated().fullname}</p>
+                        <img className='dashbord-header-avatar' alt=''
+                            src={profileImage} />
+                            &nbsp;
+                        
+                        {/* <img 
+                            src={LogoutIcon}
+                            alt='icon-logout'
+                            className='sidebar-item-icon'
+                             /> */}
+                    </ul>
+                </nav>
             </div>
         </div>
     )

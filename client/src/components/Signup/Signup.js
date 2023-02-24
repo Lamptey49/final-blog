@@ -12,6 +12,11 @@ export default function Signup(props) {
       error:'',
       redirectToRefer:false
     })
+    const [fullname, setFullname] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+    const [redirectToReferer, setRedirectToReferer] = useState(false)
    
     const navigate = useNavigate();
     const handleChange =  event => {
@@ -21,15 +26,19 @@ export default function Signup(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const user = {
-          fullname:values.fullname || undefined,
-          email:values.email || undefined,
-          password: values.password || undefined
+          fullname:fullname || undefined,
+          email:email || undefined,
+          password: password || undefined
         }
         create(user).then((data) => {
           if(data && data.error){
-            setValues({ ...values, error:data.error, redirectToRefer: false})
+            setError(data.error)
+            setRedirectToReferer(false)
           } else{
-            setValues({...values,  redirectToRefer:true })
+            setFullname('')
+            setEmail('')
+            setPassword('')
+            setRedirectToReferer(true)
           }
         })
         
@@ -40,8 +49,8 @@ export default function Signup(props) {
         pathname:'/auth/signin'
       }
     }
-    const { redirectToRefer } = values
-    if(redirectToRefer){
+    // const { redirectToRefer } = values
+    if(redirectToReferer){
       navigate(from)
     }
     const gotoLoginPage = () => navigate("/auth/signin");
@@ -53,33 +62,29 @@ export default function Signup(props) {
           <div className='signup__container'>
           <h2 className="text-center">Sign up </h2>
           <form className='signup__form' onSubmit={handleSubmit}>
-              
+          <label htmlFor='fullname'>Name</label>
+                <input
+                    className="form-control"
+                    type='text'
+                    id='fullname'
+                    name='fullname'
+                    value={fullname}
+                    required
+                    onChange={(e) => setFullname(e.target.value)}
+                    style={{width:'250px'}}
+                />
+
                 <label htmlFor='email'>Email Address</label>
                 <input
                     className="form-control"
                     type='email'
                     name='email'
                     id='email'
-                    value={values.email}
+                    value={email}
                     required
-                    onChange={handleChange}
+                    onChange={(e => setEmail(e.target.value))}
                     style={{width:'250px'}}
                 />
-           
-            
-                <label htmlFor='fullname'>Name</label>
-                <input
-                    className="form-control"
-                    type='text'
-                    id='fullname'
-                    name='fullname'
-                    value={values.fullname}
-                    required
-                    onChange={handleChange}
-                    style={{width:'250px'}}
-                />
-             
-              
                 <label htmlFor='password'>Password</label>
                 <input
                     className="form-control"
@@ -88,8 +93,8 @@ export default function Signup(props) {
                     id='password'
                     minLength={6}
                     required
-                    value={values.password}
-                    onChange={handleChange}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     style={{width:'250px'}}
                 />
               <br />

@@ -3,6 +3,9 @@ import React from 'react'
 import Footer from '../core/Footer'
 import Header from '../core/Header'
 import { v4 as uuidv4 } from 'uuid';
+import {RWebShare} from 'react-web-share'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 // import { useParams } from 'react-router-dom'
 export const SinglePage = (props) => {
 
@@ -37,7 +40,18 @@ export const SinglePage = (props) => {
                                 <a href="/">{b.title}</a>
                                 <p>{ b.body}
                                 </p>
-                            
+                            </div>
+                            <div>
+                                <RWebShare
+                                    data={{
+                                    text:{blog},
+                                    url: "/blogs/:id/:createdAt/:slug",
+                                    title: {title},
+                                    }}
+                                    onClick={() => console.log("shared successfully!")}
+                                >
+                                <button><FontAwesomeIcon icon={faShareFromSquare} /></button>
+                                </RWebShare>
                             </div>
                         </div>
                         </div>

@@ -1,11 +1,13 @@
-const colors = ["red","green","blue","orange","violet"]
+const colors = ["red","green","blue","orange","violet","green"]
 const formats = [
     [
         {
+            id:1,
             className:"ql-font",
             options:['serif','monospace', 'arial']
         },
         {
+            id:2,
             className:"ql-size",
             options:["small","large","huge"]
         }

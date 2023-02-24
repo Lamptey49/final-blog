@@ -2,14 +2,11 @@ const create = async(user) => {
     try{
         let response = await fetch('/api/users/create',{
             method: 'POST',
-            mode:'cors',
-            cache:'no-cache',
             headers:{
                 'Accept':'application/json',
                 'Content-Type':'application/json',
-                'Access-Control-Allow-Origin': '*'
             },
-            credentials:'include',
+            
             body:JSON.stringify(user)
         })
         return await response.json()
