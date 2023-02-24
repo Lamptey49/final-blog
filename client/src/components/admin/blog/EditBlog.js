@@ -2,9 +2,9 @@ import React , {useState} from 'react'
 import { update } from './api-blog'
 import { useParams } from 'react-router-dom'
 import auth from '../../../auth/auth-helper'
-import ReactQuill from 'react-quill'
-import CustomToolbar from '../Editor/CustomToolbar.js'
-import 'react-quill/dist/quill.snow.css';
+// import ReactQuill from 'react-quill'
+// import CustomToolbar from '../Editor/CustomToolbar.js'
+// import 'react-quill/dist/quill.snow.css';
 import Header from '../Header/Header'
 // import SideBar from '../Sidebar/Sidebar'
 // import sidebar_menu from '../constants/sidebar-menu'
@@ -78,8 +78,8 @@ export const EditBlog = () => {
                     <br />
                 
                     <div>
-                        <CustomToolbar />
-                       <ReactQuill theme="snow" value={body} onChange={(e) => setBody(e.target.value)} />;
+                        {/* <CustomToolbar />
+                       <ReactQuill theme="snow" value={body} onChange={(e) => setBody(e.target.value)} />; */}
                     </div>
                
                     <br />

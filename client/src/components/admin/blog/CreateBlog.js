@@ -3,9 +3,9 @@ import auth from '../../../auth/auth-helper'
 import { create } from './api-blog'
 import { Navigate } from 'react-router'
 import Header from '../Header/Header'
-import ReactQuill from 'react-quill'
-import CustomToolbar from '../Editor/CustomToolbar.js'
-import 'react-quill/dist/quill.snow.css'
+// import ReactQuill from 'react-quill'
+// import CustomToolbar from '../Editor/CustomToolbar.js'
+// import 'react-quill/dist/quill.snow.css'
 import SideBar from '../Sidebar/Sidebar'
 import sidebar_menu from '../constants/sidebar-menu'
 
@@ -96,8 +96,8 @@ export default function CreateBlog() {
                     <input accept='image/*'  className='form-control' onChange={(e) => setImage(e.target.files[0].name)} id='icon-button-file'  type='file'  />
                     <br />
                     <div>
-                        <CustomToolbar/>
-                        <ReactQuill theme="snow" value={body} onChange={setBody} formats={formats} modules={modules} />
+                        {/* <CustomToolbar/>
+                        <ReactQuill theme="snow" value={body} onChange={setBody} formats={formats} modules={modules} /> */}
                     </div>
                     <br />
                     
