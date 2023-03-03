@@ -1,6 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Link } from 'react-router-dom';
-
 
 const SideBarItem = ({ item, active }) => {
     // const [hover, setHover] = useState(false);
@@ -8,10 +8,10 @@ const SideBarItem = ({ item, active }) => {
         <Link 
             to={item.path} 
             className={active ? 'sidebar-item-active' : 'sidebar-item'} >
-                <img 
-                    src={item.icon}
+                <FontAwesomeIcon 
+                    icon={item.icon}
                     alt={`icon-${item.icon}`}
-                    className='sidebar-item-icon' />
+                    className='sidebar-item-icon fa-5x' />
                 <span className='sidebar-item-label'>{item.title}</span>
         </Link>
     )

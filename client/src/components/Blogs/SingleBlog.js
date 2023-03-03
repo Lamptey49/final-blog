@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Link} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-const SingleBlog = (props) => {
+const SingleBlog = ({navigation}) => {
     
     const [blog, setBlog] = useState([])
-    // const navigate = useNavigate()
     
-
-
+    const {_id} = useParams()
+    const history = useNavigate()
+    // const {title, body, createdAt, tags, categories, image} = props.params
+    
     useEffect(() => {
         
         const abortController = new AbortController()
@@ -26,27 +27,27 @@ const SingleBlog = (props) => {
             abortController.abort()
         }
     }, [])
-  return (
-    <div>
-       
-        {blog.length > 0 && (
-            <div>
-                {blog.map(b => (
-                    <div key={uuidv4()}>
-                        <h2 className='text-dark lead'>{b.title}</h2>
-                        <img src={b.image} alt={b.title} />
-                        <p>{(b.body).substring(0, 200)}...</p>
-                        {/* <a className="btn" href={`/blogs/${b._id}/${b.createdAt}/${b.slug}`}>Read More</a> */}
-                        <Link 
-                            to={`/blogs/${b._id}/${b.createdAt}/${b.slug}`}
-                            state={{id:b._id, createdAt:b.createdAt, slug:b.slug, title:b.title, body:b.categories}}
-                        className='btn' >Read More</Link>
-                    </div>
-                ))}
-            </div>
-         )}
-    </div>
-  )
+    return (
+        <div>
+        {/**/}
+            {blog.length > 0 && (
+                <div>
+                    {blog.map((b, _id) => (
+                        <div key={_id}>
+                                <div key={uuidv4()}>
+                                <h2 className='text-dark lead bold'>{b.title}</h2>
+                                {/* <img src={b.image} alt={b.title} /> */}
+                                <p>{(b.body.substring(0,180))}...</p>
+                                <a className='btn' href={`/blogs/${b._id}`}
+                            >Read More</a>
+                                </div>
+                            
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
 }
 
 export default SingleBlog

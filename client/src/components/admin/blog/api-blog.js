@@ -1,24 +1,26 @@
-// const queryString = await import('query-string')
+import axios from "axios"
+// import queryString from "query-string"
 // const queryString = require('query-string')
 const create = async ( credentials,  blog )=>{
     try {
         const response = await fetch('/api/new/blog', {
-            method: 'POST',
+            method:'POST',
             headers: {
-                'Accept': 'application/json',
+                
                 'Authorization': 'Bearer ' + credentials.t,
-                'Access-Control-Allow-Origin':'*',
-                'Access-Control-Allow-Credentials':true
             },
             body: blog
         })
+        
         return await response.json()
+        
     } catch (err) {
         return console.log(err)
     }
 }
 const  list = async (params, signal)=> {
     // const query = queryString.stringify(params)
+    let query = ''
     
     try {
         const response = await fetch('/api/blogs?' + query, {
@@ -30,17 +32,19 @@ const  list = async (params, signal)=> {
     }
 }
 
-const read = async( params, signal) => {
+const read = async( id, signal) => {
     try{
 
-       let response =  await fetch(`/api/blogs/:${params.blogId}`, {
+        await fetch(`/api/blogs/${id}`, {
             method:'GET',
             headers:{
                 'Accept':'Content-Type',
+                'Content-Type':'application/json'
             },
             signal:signal
-        })
-        return response.json()
+        }).then(response =>{
+            return response.json()}
+        )
     }
     catch(err){
         console.log(err)

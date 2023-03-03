@@ -11,35 +11,29 @@ import { signin } from '../../auth/api-auth'
 
 export default function Signin(props) {
 
-    
+ 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [redirectToReferer, setRedirectToReferer] = useState(false)
-    // const [values, setValues] = useState({
-    //     email:'',
-    //     password:'',
-    //     error:'',
-    //     redirectToReferer: false
-    // })
     
-    // const { setAuth } = useContext(AuthContext)
     const navigate = useNavigate()
 
     const clickSubmit = async(e) => {
       e.preventDefault()
       const user = {
         email: email || undefined,
-        password: password || undefined
+        password:password || undefined
       }
       signin(user).then((data) => {
-        if(data && data.error){
-            setError('')
+        if(error){
+            setError('Could not signin!, Email or password do not match')
+            setRedirectToReferer(false)
+            
         } else {
             auth.authenticate(data, () => {
                 setEmail('')
                 setPassword('')
-                setError('')
                 setRedirectToReferer(true)
             })
         }
@@ -51,9 +45,9 @@ export default function Signin(props) {
             pathname: '/admin'
         }
     }
-    
-    if(redirectToReferer === true){
-        navigate(from)
+    // const {redirectToReferer} = data
+    if(redirectToReferer){
+       return (navigate(from))
     }
     const gotoRegister = () => navigate('/user/signup')
    
@@ -65,6 +59,7 @@ export default function Signin(props) {
       <div className='container flex'>
         <div className='login__container'>      
           <h2 className="text-center">Sign In </h2>
+            {error && <p>{error}</p>}
           <form className='login__form' onSubmit={clickSubmit}>
             <input
                 value={email}

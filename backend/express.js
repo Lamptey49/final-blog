@@ -1,7 +1,6 @@
 import express from 'express'
 import path from 'path'
 import bodyParser from 'body-parser'
-// import devBundle from './devBundle'
 import userRoutes from './routes/user.routes'
 import authRoutes from './routes/auth.routes'
 import blogRoutes from './routes/blog.routes'
@@ -49,13 +48,7 @@ app.use('*', (req, res)=> {
         markup: markup
    }))
 })
-app.use('/',(req, res)=>{
-    res.set({
-        'Content-Type':'application/json',
-        'Access-Control-Allow-Origin': 'https://scopaf.herokuapp.com',
-        'Access-Control-Request-Headers':['GET','POST','PUT','DELETE']
-    })
-})
+
 
 app.use((err, req, res, next)=>{
     if(err.name == 'UnauthorizedError'){

@@ -15,7 +15,8 @@ const Blog = () => {
      fetch('/api/blogs/by', signal,{
       method:'GET',
       headers:{
-          'Accept':'Content-Type',  
+          // 'Accept':'Content-Type', 
+          'Content-Type':'application/json' 
       }
   }).then(response => {
       return response.json()
@@ -25,7 +26,7 @@ const Blog = () => {
     return function cleanup(){
       abortController.abort()
     }
-  })
+  }, [])
 
   // useEffect(()=>{
   //   const abortController = new AbortController()
@@ -53,7 +54,7 @@ const Blog = () => {
       <div>
         {blogs.map(blog =>(
           <div key={uuidv4()}>
-            <p><a href={`/blogs/${blog.createdAt}/${blog._id}/${blog.slug}`}>{blog.title}</a></p>
+            <p><a href={`/blogs/${blog._id}`}>{blog.title}</a></p>
           </div>
         ))}
       </div>

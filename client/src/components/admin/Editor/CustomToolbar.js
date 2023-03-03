@@ -4,8 +4,8 @@ import formats from './ToolbarOptions.js'
 const renderOptions = (formatData)=>{
     const {className,options} = formatData;
     return (
-        <select className = {className}>
-            <option  selected='selected'></option>
+        <select defaultValue={''} onChange={(e) => e.persist()} className = {className}>
+            <option  defaultValue={''}></option>
             {
                 options.map(value =>{
                     return (

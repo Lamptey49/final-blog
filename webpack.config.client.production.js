@@ -16,11 +16,11 @@ const config = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: /node_modules/,
+                exclude: /node_modules(?\/react-quill)/,
                 use: 'babel-loader'
             },
             {
-                test: /\.(ttf|eot|svg|gif|jpg|png|woff2|woff)(\?[\s\S]+)?$/,
+                test: /\.(ttf|eot|svg|gif|jpg|jpeg|png|woff2|woff)(\?[\s\S]+)?$/,
                 use: 'file-loader'
             },
             {
@@ -31,7 +31,7 @@ const config = {
                 },
                 {
                     loader:'css-loader',
-                    
+                    options:{ import : true}
             },
                 ],
             },

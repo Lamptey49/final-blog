@@ -4,60 +4,26 @@ import errorHandler from '../helpers/dbErrorHandler'
 import fs from 'fs'
 import formidable from 'formidable'
 import path from 'path'
-import { fileURLToPath } from 'url'
 import multer from 'multer'
+
 const blogCtrl = {
+    
     create: async(req, res)=>{
-       
-        let form =  formidable({ multiples: true})
-
-        form.keepExtensions = true 
-        
-        form.parse(req, (err, fields, files)=>{
-            
-            let blog = Blog(fields)
-           var storage = multer.diskStorage({
-            destination: function(req, file, cb){
-                cb(null, 'uploads')
-            }, 
-            filename: function(req, file, cb){
-                cb(null, file.fieldname +'-'+Date.now())
-            }
-           })
-           var upload = multer({ storage: storage})
-
-            blog.user = req.profile 
-            if(files.image){
-                // let oldPath = files.image.filepath
-                // let newPath = path.join(__dirname, '../../dist/uploads/' + files.image.name)
-                // let rawData = fs.readFileSync(oldPath, 'utf-8')
-                
-                // fs.writeFile(newPath, rawData, ()=>{
-                //     if(err){
-                //         return res.status(400).json({
-                //             error: 'Could not add image'
-                //         })
-                //     }
-                // })
-                var img = fs.readFileSync(files.image.filepath)
-                var encode_img = img.toString('base64')
-                
-                 blog.image.data = new Buffer.from(encode_img, 'base64')
-                 blog.image.contentType = files.image.mimeType
-                
-
-            }
-           
-                 blog.save((result)=>{
-                    if(err)
-                        return res.status(400).json({
-                            error:errorHandler.getErrorMessage(err)
-                    })
-                    res.status(200).json(result)
-                })
-           
-        })
-     
+        try{
+            let blog = new Blog({
+                title: req.body.title,
+                slug:req.body.slug,
+                body:req.body.body,
+                categories:req.body.categories,
+                tags:req.body.tags,
+                image:req.file.filename,
+                postedBy:req.profile
+            })
+            const result = blog.save()
+            res.status(200).send({ success: true, msg:'Blog Published successfully', data:result})
+        } catch(error){
+            res.status(400).send({ success:false, msg:error.message})
+        }
     },
     listBlog: async(req, res)=>{
         try{
@@ -80,12 +46,13 @@ const blogCtrl = {
     },
     blogByID:async(req, res, next, id)=>{
         try {
-            let blog = await Blog.findById(id).populate('blog', 'id title slug body categories tags image createdAt').exec()
+            let blog = await Blog.findById(id)
+            .populate('blog', 'id title slug body categories tags image createdAt').exec()
             if(!blog)
                 return res.status(400).json({
                     error:'Blog not found'
                 })
-            req.blog = blog
+            // req.blog = blog
             next()
         } catch (err) {
             return res.status(400).json({
@@ -105,9 +72,17 @@ const blogCtrl = {
         }
     },
     read:async(req, res)=>{
-        let blog = await Blog.find({})
-        blog.image = undefined 
-        return res.json(req.blog)
+        const id = req.id
+        Blog.findOne({id})
+        .select('id title body slug image  categories tags postedBy createdAt')
+        .exec((err, data) => {
+            if (err) {
+                return res.json({
+                    error: 'Could not retrieve blog'
+                });
+            }
+            res.json(data);
+        });
     },
     listCategories:async(req, res)=>{
         try {
@@ -171,6 +146,12 @@ const blogCtrl = {
               error: errorHandler.getErrorMessage(err)
             })
           }
+    },
+    photo:(req, res)=>{
+        if(req.blog.image.data){
+            res.set('Content-Type',req.blog.image.contentType)
+            return res.send(req.blog.image.data)
+        }
     }
 }
 

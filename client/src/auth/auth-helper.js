@@ -1,5 +1,5 @@
 import { signout } from "./api-auth"
-
+import cookie from 'js-cookie'
 const auth = {
     authenticate(jwt, cb){
         if(typeof window !== "undefined")
@@ -15,13 +15,18 @@ const auth = {
         else
             return false
     },
-    clearJWT(cb){
+    getCookie: key =>{
+        if(typeof window == 'undefined'){
+            cookie.get(key)
+        }
+    },
+    clearJWT(){
         if(typeof window !== 'undefined')
             sessionStorage.removeItem('jwt')
-        cb()
         signout().then((data) => {
             document.cookie = "t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
         })
+       
     }
 
 }

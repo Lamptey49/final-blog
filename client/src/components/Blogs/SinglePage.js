@@ -1,62 +1,75 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 // import { read } from '../admin/blog/api-blog'
 import Footer from '../core/Footer'
 import Header from '../core/Header'
 import { v4 as uuidv4 } from 'uuid';
 import {RWebShare} from 'react-web-share'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
-// import { useParams } from 'react-router-dom'
-export const SinglePage = (props) => {
+import {  faShare } from '@fortawesome/free-solid-svg-icons';
+import { useParams} from 'react-router-dom';
+import mainImage from '../../assets/images/scopaf.jpeg'
+import { read } from '../admin/blog/api-blog';
+import axios from 'axios'
+import { method } from 'lodash';
+import { PopularBlog } from './PopularBlog';
 
-    
-    // const [blogs, setBlogs] = useState([])
-   
-  return (
-    <>
-    
-    <Header />
-    <main>
-        <section>
-            {props.blogs && props.blogs.length > 0  && (
-            <div className='blog'>
-                {props.blogs.map(b => (
+export const SinglePage = () => {
 
-                <div className='container'>
-                    <div className='site-content'>
-                        <div className='posts' key={uuidv4()}>
-                        <div className="post-content" data-aos="zoom-in" data-aos-delay="200">
-                            <div className="post-image">
-                                <div>
-                                    <img src="/g" className="img" alt="blog1" />
-                                </div>
-                                <div className="post-info flex-row">
-                                    <span><i className="fas fa-user text-gray"></i>&nbsp;&nbsp;{(b.createdAt)}</span>
-                                    <span><i className="fas fa-calendar-alt text-gray"></i>&nbsp;&nbsp;January 14, 2019</span>
-                                
-                                </div>
-                            </div>
-                            <div className="post-title">
-                                <a href="/">{b.title}</a>
-                                <p>{ b.body}
-                                </p>
-                            </div>
+    const [blog, setBlog] = useState([])
+    const {id} = useParams()
+    
+    let content = null
+    useEffect(() => {
+        const signal = new AbortController()
+        const abortController = signal 
+        fetch('/api/blogs/'+id, {
+            method:'GET',
+        })
+        .then((response)=>{ return response.json()})
+        .then(data => {
+            setBlog(data) 
+        })
+        return function cleanup(){
+            abortController.abort()
+        }
+    },[])
+   if(blog){
+    content = 
+    <div className='blog'>
+        <div className='container'>
+            <div className='site-content'>
+                <div className='posts' key={uuidv4()}>
+                    <div className="post-content" data-aos="zoom-in" data-aos-delay="200">
+                        <div className="post-image">
                             <div>
-                                <RWebShare
-                                    data={{
-                                    text:{blog},
-                                    url: "/blogs/:id/:createdAt/:slug",
-                                    title: {title},
-                                    }}
-                                    onClick={() => console.log("shared successfully!")}
-                                >
-                                <button><FontAwesomeIcon icon={faShareFromSquare} /></button>
-                                </RWebShare>
+                                <img src={`/dist/uploads/${blog.image}`} className="img" alt={blog.title} />
                             </div>
+                            <div className="post-info flex-row">
+                                <span><i className="fas fa-user text-gray"></i>&nbsp;&nbsp;{'Admin'}</span>
+                                <span><i className="fas fa-calendar-alt text-gray"></i>&nbsp;&nbsp;{new Date(blog.createdAt).toDateString()}</span>
+                            
+                            </div>
+                        </div>
+                        <div className="post-title">
+                            <a href="/">{blog.title}</a>
+                            <p>{blog.body}
+                            </p>
+                        <div>
+                            <RWebShare
+                                data={{
+                                text:blog.slug,
+                                url: `/blogs/:${blog._id}`,
+                                title: blog.title,
+                                }}
+                                onClick={() => console.log("shared successfully!")}
+                            >
+                            <button className='btn btn-ouline'><FontAwesomeIcon icon={faShare} /></button>
+                            </RWebShare>
                         </div>
                         </div>
                     </div>
-                    <aside className='sidebar'>
+                </div>
+                <aside className='blog-sidebar'>
                     <div className="category">
                             <h2>Category</h2>
                             <ul className="category-list">
@@ -81,15 +94,25 @@ export const SinglePage = (props) => {
                                     <span>(08)</span>
                                 </li>
                             </ul>
-                        </div>
-                    </aside>
-                </div>
-                ))}
+                    </div>
+                    <div className="popular-post">
+                        <h2>Popular Post</h2>
+                        <PopularBlog />
+                    </div>
+                </aside>
             </div>
-            )}
-        </section>
-           
-    </main>
+        </div>
+    </div>
+   }
+    return (
+    <>
+    
+    <Header />
+    <div>
+        <main>
+           {content}  
+        </main>
+    </div>
     <Footer />
     </>
   )

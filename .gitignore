@@ -1,3 +1,4 @@
 package-lock.json
 scopaf-blog/node_modules/*
 node_modules/*
+dist/*

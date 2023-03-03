@@ -9,7 +9,6 @@ const blogSchema = new  mongoose.Schema({
     slug:{
         type:String,
         required: true,
-        index: true
     },
     body:{
         type:String,
@@ -17,8 +16,9 @@ const blogSchema = new  mongoose.Schema({
         min: 20    
     },
     image:{
-        data: Buffer,
-        contentType: String,
+        type:String,
+        required:true
+       
     },
     categories:{type:String},
     tags:{type: String},

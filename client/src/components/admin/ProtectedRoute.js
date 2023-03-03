@@ -8,10 +8,10 @@ function ProtectedRoute(props) {
   const checkUserToken = () => {
     if(!auth.isAuthenticated()){
       setIsLoggedIn(false)
-      navigate('/auth/signin')
-    } else{
+      return navigate('/auth/signin')
+    } 
       setIsLoggedIn(true)
-    }
+    
   }
   useEffect(() => {
     checkUserToken()
@@ -19,7 +19,7 @@ function ProtectedRoute(props) {
 
     return (
     <React.Fragment>
-      {  isLoggedIn ? props.children :  navigate('/auth/signin')}
+      {  isLoggedIn ? props.children :  null}
     </React.Fragment>
       )
   }

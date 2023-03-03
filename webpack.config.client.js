@@ -30,7 +30,7 @@ const config = {
                 
             },
             {
-                test: /\.(ttf|eot|svg|gif|jpg|png|woff2|woff)(\?[\s\S]+)?$/,
+                test: /\.(ttf|eot|svg|gif|jpg|jpeg|png|woff2|woff|ico)(\?[\s\S]+)?$/,
                 use: 'file-loader'
             },
             {
@@ -41,6 +41,7 @@ const config = {
                 },
                 {
                     loader:'css-loader',
+                    options:{ import : true}
                     
             },
                 ],
