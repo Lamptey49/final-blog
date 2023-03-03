@@ -1,11 +1,9 @@
-import React, { useState, lazy  } from 'react'
+import React, { useState, lazy, Suspense  } from 'react'
 import { create } from './api-blog'
 import { Navigate } from 'react-router'
 import { Link } from 'react-router-dom'
 const ReactQuill = lazy(() => import('react-quill'))
 import CustomToolbar from '../Editor/CustomToolbar.js'
-// import 'react-quill/dist/quill.snow.css'
-
 import { useCookies } from 'react-cookie'
 import SideBar from '../Sidebar/Sidebar'
 import sidebar_menu from '../constants/sidebar-menu'
@@ -13,27 +11,16 @@ import sidebar_menu from '../constants/sidebar-menu'
 export default function CreateBlog(children) {
     
     const [cookies ] = useCookies(['jwt'])
-    // const [title, setTitle] = useState('')
-    // const [slug, setSlug] = useState('')
-    // const [categories, setCategories] = useState('')
-    // const [tags, setTags] = useState('')
-    // const [redirect, setRedirect] = useState(false)
-    // const [body, setBody] = useState('')
-    // const [success, setSuccess] = useState('')
-    // const [error, setError] = useState('')
-    // const [image, setImage] = useState('')
-
     const [values, setValues] = useState({
         title:'',
         slug:'',
-        body:'',
         categories:'',
         tags:'',
         image:'',
         error:'',
         redirect:false
     })
- 
+    const [body, setBody]= useState('')
     const modules ={ toolbar :{
         container:'#toolbar'
     }
@@ -59,7 +46,7 @@ export default function CreateBlog(children) {
     }
 
     const handleBody = (html) =>{
-        setValues({ body: html });
+        setBody(html)
     }
 
     const clickSubmit = (e) => {
@@ -67,7 +54,7 @@ export default function CreateBlog(children) {
         let blogData = new FormData()
         values.title && blogData.append('title',values.title)
         values.categories && blogData.append('categories',values.categories)
-        values.body && blogData.append('body',values.body)
+        body && blogData.append('body',body)
         values.tags && blogData.append('tags',values.tags)
         values.image &&  blogData.append('image',values.image)
         values.slug && blogData.append('slug',values.slug)
@@ -122,8 +109,10 @@ export default function CreateBlog(children) {
                             <input accept='image/*'  className='form-control'  onChange={handleChange('image')} id='icon-button-file'  type='file'  />
                             <br />
                             <div>
-                                <CustomToolbar/> 
-                                <ReactQuill theme="snow" id='body' value={values.body} onChange={handleBody} formats={formats} modules={modules} />
+                                <Suspense>
+                                    <CustomToolbar/> 
+                                    <ReactQuill theme="snow" id='body' value={body} onChange={handleBody} formats={formats} modules={modules} />
+                                </Suspense>
                                 {/* <textarea id='body' className='form-control' cols='50' row='50' value={values.body} onChange={handleChange('body')}></textarea> */}
                             
                             </div>

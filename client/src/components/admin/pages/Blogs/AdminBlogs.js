@@ -1,15 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import Header from '../../Header/Header';
-import { listBlogs } from '../../blog/api-blog';
-// import all_orders from '../../constants/orders';
 import {calculateRange, sliceData} from '../../utils/table-pagination';
-import SideBar from '../../Sidebar/Sidebar';
-import sidebar_menu from '../../constants/sidebar-menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faTrash, faEdit} from '@fortawesome/free-solid-svg-icons'
-// import DoneIcon from '../../../../assets/icons/done.svg';
-// import CancelIcon from '../../../../assets/icons/cancel.svg';
-// import RefundedIcon from '../../../../assets/icons/refunded.svg';
+import auth from '../../../../auth/auth-helper'
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function AdminBlogs () {
     const [search, setSearch] = useState('');
@@ -69,6 +64,52 @@ function AdminBlogs () {
         setBlogs(sliceData(blogs, new_page, 5));
     }
 
+    const [show, setShow] = useState(false)
+    const handleShow = () => setShow(true)
+
+    const jwt = auth.isAuthenticated()
+    const deleteBlog = () => {
+        remove({blogId: blog._id}, {t: jwt.token}).then((data) =>{
+            if(data && data.error){
+                console.log(data.error)
+            } else {
+                setOpen(false)
+                props.onRemove(props.blog)
+            }
+        })
+    }
+    const handleRequestClose = () => {
+        setOpen(false)
+    }
+
+    function renderDelete(){
+        return (<>
+        <Modal
+            show={show}
+            onHide={handleRequestClose}
+            backdrop="static"
+            keyboard={false}
+        >
+        <Modal.Header closeButton>
+          <Modal.Title>{props.blog.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            Confirm to delete your product {props.blog.title}.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleRequestClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={deleteBlog}>Confirm</Button>
+        </Modal.Footer>
+      </Modal>
+    </>)
+
+    render(<renderDelete/>)
+
+    }
+
+
     return(
             <div className='dashboard-content'>
                 <div className='dashboard-content-container'>
@@ -98,13 +139,13 @@ function AdminBlogs () {
                             <tbody>
                                 {blogs && blogs.map((blog, index) => (
                                     <tr key={index}>
-                                        <td><span style={{fontSize:'1.3rem'}}>{blog.title}</span></td>
-                                        <td><span style={{fontSize:'1.3rem'}}>{(blog.body).substring(0, 20)}...</span></td>
-                                        <td><span style={{fontSize:'1.3rem'}}>{new Date(blog.createdAt).toDateString()}</span></td>
+                                        <td><span style={{fontSize:'1rem'}}>{blog.title}</span></td>
+                                        <td><span style={{fontSize:'1rem'}}>{(blog.body).substring(0, 20)}...</span></td>
+                                        <td><span style={{fontSize:'1rem'}}>{new Date(blog.createdAt).toDateString()}</span></td>
                                         <td>
                                         
-                                    <a href={`/admin/edit/blog/${blog._id}}`}> <FontAwesomeIcon icon={faEdit} style={{color:'green', fontSize:'1.3rem'}}/></a> &nbsp;
-                                    <a href={`/admin/delete/blog/${blog._id}`}> <FontAwesomeIcon icon={faTrash} style={{color:'red', fontSize:'1.3rem'}}/></a> &nbsp;
+                                    <a href={`/admin/edit/blog/${blog._id}}`} > <FontAwesomeIcon icon={faEdit} style={{color:'green', fontSize:'1.3rem'}}/></a> &nbsp;
+                                    <button onClick={handleShow}> <FontAwesomeIcon icon={faTrash} style={{color:'red', borderStyle:'none', fontSize:'1.3rem'}}/></button> &nbsp;
                                         </td>
                                     </tr>
                                 ))}

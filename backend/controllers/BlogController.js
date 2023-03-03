@@ -1,10 +1,9 @@
 import Blog from '../models/BlogModel'
-import extend, { truncate } from 'lodash'
+import extend from 'lodash'
 import errorHandler from '../helpers/dbErrorHandler'
 import fs from 'fs'
 import formidable from 'formidable'
-import path from 'path'
-import multer from 'multer'
+
 
 const blogCtrl = {
     
@@ -27,7 +26,7 @@ const blogCtrl = {
     },
     listBlog: async(req, res)=>{
         try{
-            let blogs = await Blog.find()
+            let blogs = await Blog.find().sort('-createdAt').exec()
             res.json(blogs)
         } catch(err){
             return res.status(400).json({

@@ -14,8 +14,7 @@ import ProtectedRoute from './components/admin/ProtectedRoute'
 import CreateBlog from './components/admin/blog/CreateBlog'
 import AdminBlogs from './components/admin/pages/Blogs/AdminBlogs'
 import { EditBlog } from './components/admin/blog/EditBlog'
-// import { EditBlog } from './components/admin/blog/EditBlog'
-
+import { DeleteBlog } from './components/admin/blog/DeleteBlog'
 
 export default function MainRouter() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -46,6 +45,7 @@ export default function MainRouter() {
               <Route path='blogs' element={<AdminBlogs />} />
             </Route>
               <Route path='/admin/edit/blog/:id' element={<EditBlog />} />
+              {/* <Route path='/admin/delete/blog/:id' element={<DeleteBlog />} /> */}
               <Route path='/admin/new/blog'  element={<CreateBlog />}/>
            
         </Routes>

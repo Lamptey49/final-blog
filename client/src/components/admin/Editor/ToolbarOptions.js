@@ -4,7 +4,7 @@ const formats = [
         {
             id:1,
             className:"ql-font",
-            options:['serif','monospace', 'arial']
+            options:['serif','monospace', 'arial', 'times new roman']
         },
         {
             id:2,

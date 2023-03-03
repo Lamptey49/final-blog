@@ -3,6 +3,7 @@ import { hydrateRoot, createRoot } from 'react-dom/client';
 import { render } from 'react-dom';
 import './index.css';
 import '../../node_modules/@fortawesome/fontawesome-svg-core/styles.css'
+import 'react-quill/dist/quill.snow.css'
 
 import App from './App';
 
