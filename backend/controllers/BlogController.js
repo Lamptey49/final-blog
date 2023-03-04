@@ -3,7 +3,7 @@ import extend from 'lodash'
 import errorHandler from '../helpers/dbErrorHandler'
 import fs from 'fs'
 import formidable from 'formidable'
-
+import mongoose from 'mongoose'
 
 const blogCtrl = {
     
@@ -71,8 +71,8 @@ const blogCtrl = {
         }
     },
     read:async(req, res)=>{
-        const id = req.id
-        Blog.findOne({id})
+        const id = new mongoose.Types.ObjectId()
+        Blog.findById(req.params.id)
         .select('id title body slug image  categories tags postedBy createdAt')
         .exec((err, data) => {
             if (err) {
