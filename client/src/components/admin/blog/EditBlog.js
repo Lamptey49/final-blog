@@ -1,51 +1,58 @@
-import React , {useState} from 'react'
+import React , {useState,  lazy, Suspense } from 'react'
 import { update } from './api-blog'
 import { useParams } from 'react-router-dom'
-import auth from '../../../auth/auth-helper'
-// import ReactQuill from 'react-quill'
-// import CustomToolbar from '../Editor/CustomToolbar.js'
-// import 'react-quill/dist/quill.snow.css';
+const ReactQuill = lazy(() => import('react-quill'))
+import CustomToolbar from '../Editor/CustomToolbar.js'
 import SideBar from '../Sidebar/Sidebar'
 import sidebar_menu from '../constants/sidebar-menu'
+import { useCookies } from 'react-cookie'
 
 
 export const EditBlog = () => {
+    const [cookies] = useCookies(['jwt'])
+    const jwt = cookies
     const params = useParams()
-    const [title, setTitle] = useState('')
-    const [slug, setSlug] = useState('')
-    const [categories, setCategories] = useState('')
-    const [tags, setTags] = useState('')
-    const [redirect, setRedirect] = useState(false)
-    const [body, setBody] = useState('')
-    const [success, setSuccess] = useState('')
-    const [error, setError] = useState('')
-    const [image, setImage] = useState('')
-    const clickSubmit = () => {
-        const jwt = auth.isAuthenticated()
+    const [values, setValues] = useState({
+        title:'',
+        slug:'',
+        categories:'',
+        tags:'',
+        image:'',
+        error:'',
+        redirect:false
+    })
+    const handleChange = name => event => {
+        const value = name === 'image'
+          ? event.target.files[0]
+          : event.target.value
+        setValues({...values,  [name]: value })
+       
+    }
+    const [body, setBody]= useState('')
+    const clickSubmit = (e) => {
+        e.preventDefault()
         let blogData = new FormData()
-        title = blogData.append('title',title)
-        categories = blogData.append('categories', categories)
-        body = blogData.append('body', body)
-        tags = blogData.append('tags', tags)
-        image = blogData.append('image', image)
-        slug = blogData.append('slug', slug)
+        values.title && blogData.append('title',values.title)
+        values.categories && blogData.append('categories',values.categories)
+        body && blogData.append('body',body)
+        values.tags && blogData.append('tags',values.tags)
+        values.image &&  blogData.append('image',values.image)
+        values.slug && blogData.append('slug',values.slug)
 
-        update({blogId: params.blogId},jwt.user._id, blogData).then((data) =>{
+        update({blogId: params.blogId,t:jwt.t}, blogData)
+        .then((data) =>{
             if(data && data.error){
-                setError(data.error)
+               setValues({...values, error:'Could not update blog', redirect:false})
             } else{
-                setTitle('')
-                setSlug('')
-                setBody('')
-                setImage('')
-                setCategories('')
-                setTags('')
-                setSuccess('')
-                setRedirect(true)
+                setValues({...values, redirect:true})
             }
         })
     }
 
+    const handleBody = (html) =>{
+        setBody(html)
+    }
+    
     const modules ={ toolbar :{
         container:'#toolbar'
     }
@@ -60,6 +67,7 @@ export const EditBlog = () => {
         'direction','align',
         'link','image','video','formula',
     ]
+    const { redirect } = values
     if(redirect == true){
         return (<Navigate to={'/admin'} />)
     }
@@ -74,28 +82,28 @@ export const EditBlog = () => {
                             <form>
                                 <h2 className='text-center'>Update Blog</h2>
                                 <div className='form-group'>
-                                    <input id='title' className='form-control me-2' placeholder='Title' onChange={(e) => setTitle(e.target.value)} value={title} /> 
+                                    <input id='title' className='form-control me-2' placeholder='Title' onChange={handleChange('title')} value={values.title} /> 
                                 </div>
                             <br />
                             <div className='form-group'>
-                                <input id='slug' className='form-control' placeholder='Slug' onChange={(e) => setSlug(e.target.value)}  value={slug}  />
+                                <input id='slug' className='form-control' placeholder='Slug' onChange={handleChange('slug')}  value={values.slug}  />
                             </div>
                             <br />
-                            <input id='category' className='form-control' placeholder='Category' onChange={(e) => setCategories(e.target.value)} value={categories}   />
+                            <input id='category' className='form-control' placeholder='Category' onChange={handleChange('categories')} value={values.categories}   />
                             <br />
-                            <input id='tag' className='form-control' placeholder='Tag' value={tags} onChange={(e) => setTags(e.target.value)} />
+                            <input id='tag' className='form-control' placeholder='Tag' value={values.tags} onChange={handleChange('tags')} />
                             <br />
                             <label htmlFor='icon-button-file' style={{color:'red'}}>
                                     Change Featured Image 
                             </label>
                             <br />
-                            <input accept='image/*'  className='form-control' onChange={(e) => setImage(e.target.files[0].name)} id='icon-button-file' value={image} type='file'  />
+                            <input accept='image/*'  className='form-control' onChange={handleChange('image')} id='icon-button-file' type='file'  />
                             <br />
                         
                             <div>
-                                {/* <CustomToolbar />
-                            <ReactQuill theme="snow" value={body} onChange={(e) => setBody(e.target.value)} modules={modules} formats={formats} />; */}
-                             <textarea className='form-control' cols='50' row='50' name='body' value={body} onChange={(e) => setBody(e.target.value)}></textarea>
+                            <CustomToolbar />
+                            <ReactQuill theme="snow" value={body} onChange={handleBody} modules={modules} formats={formats} />;
+                             {/* <textarea className='form-control' cols='50' row='50' name='body' value={body} onChange={(e) => setBody(e.target.value)}></textarea> */}
                             
                             </div>
                     
