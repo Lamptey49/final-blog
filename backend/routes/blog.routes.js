@@ -8,7 +8,7 @@ import path from 'path'
 const router = express.Router()
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, path.join('../../dist/uploads/'), (error, success)=>{
+        cb(null, path.join('./../../dist/uploads/'), (error, success)=>{
 
             if(error){
                 console.log(error)
