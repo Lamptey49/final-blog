@@ -1,5 +1,5 @@
-import React , {useState,  lazy, Suspense } from 'react'
-import { update } from './api-blog'
+import React , {useState,  lazy, Suspense, useEffect } from 'react'
+import { read, update } from './api-blog'
 import { useParams } from 'react-router-dom'
 const ReactQuill = lazy(() => import('react-quill'))
 import CustomToolbar from '../Editor/CustomToolbar.js'
@@ -11,7 +11,8 @@ import { useCookies } from 'react-cookie'
 export const EditBlog = () => {
     const [cookies] = useCookies(['jwt'])
     const jwt = cookies
-    const params = useParams()
+    const {blogId} = useParams()
+    const [body, setBody]= useState('')
     const [values, setValues] = useState({
         title:'',
         slug:'',
@@ -21,6 +22,25 @@ export const EditBlog = () => {
         error:'',
         redirect:false
     })
+   
+    useEffect(() => {
+        const abortController = new AbortController()
+        const signal = abortController.signal
+        read({blogId:blogId}, signal).then((data)=>{
+            if(data && data.error){
+                setValues({...values, error: data.error})
+            }
+            else{
+                setValues({...values, id: data._id, 
+                    title: data.title, slug:data.slug, categories:data.categories,
+                     tags: data.tags, image:data.image})
+                     setBody({body: data.body})
+            }
+        })
+        return function cleanup(){
+            abortController.abort()
+        }
+    }, [])
     const handleChange = name => event => {
         const value = name === 'image'
           ? event.target.files[0]
@@ -28,7 +48,11 @@ export const EditBlog = () => {
         setValues({...values,  [name]: value })
        
     }
-    const [body, setBody]= useState('')
+    const getId = ()=> {
+        let id = sessionStorage.getItem('jwt')
+       return JSON.parse(id)
+       
+    }
     const clickSubmit = (e) => {
         e.preventDefault()
         let blogData = new FormData()
@@ -39,7 +63,7 @@ export const EditBlog = () => {
         values.image &&  blogData.append('image',values.image)
         values.slug && blogData.append('slug',values.slug)
 
-        update({blogId: params.blogId,t:jwt.t}, blogData)
+        update({blogId: blogId, userId: getId().user._id},{ t:getId().token}, blogData)
         .then((data) =>{
             if(data && data.error){
                setValues({...values, error:'Could not update blog', redirect:false})

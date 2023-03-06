@@ -22,7 +22,7 @@ import React from 'react'
                               </div>
                               <div className="post-title">
                                   <a href="/">{blog.title}</a>
-                                  <p>{ blog.body}
+                                  <p >{ blog.body}
                                   </p>
                               
                               </div>

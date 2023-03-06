@@ -1,15 +1,19 @@
 import React, { useState, lazy, Suspense  } from 'react'
 import { create } from './api-blog'
 import { Navigate } from 'react-router'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 const ReactQuill = lazy(() => import('react-quill'))
 import CustomToolbar from '../Editor/CustomToolbar.js'
 import { useCookies } from 'react-cookie'
 import SideBar from '../Sidebar/Sidebar'
 import sidebar_menu from '../constants/sidebar-menu'
+import auth from '../../../auth/auth-helper'
 
-export default function CreateBlog(children) {
+export default function CreateBlog() {
     
+
+    const params = useParams()
+    let reactQuillRef = null
     const [cookies ] = useCookies(['jwt'])
     const [values, setValues] = useState({
         title:'',
@@ -36,7 +40,7 @@ export default function CreateBlog(children) {
         'link','image','video','formula',
     ]
     const jwt = cookies
-    
+    const uId = auth.isAuthenticated()
     const handleChange = name => event => {
         const value = name === 'image'
           ? event.target.files[0]
@@ -45,8 +49,13 @@ export default function CreateBlog(children) {
        
     }
 
-    const handleBody = (html) =>{
-        setBody(html)
+    const handleBody = () =>{
+        const editor = reactQuillRef.getEditor()
+        const unprivilegedEditor = reactQuillRef.makeUnprivilegedEditor(editor)
+        const inpText = unprivilegedEditor.getText()
+        setBody(inpText)
+       
+        
     }
 
     const clickSubmit = (e) => {
@@ -59,7 +68,7 @@ export default function CreateBlog(children) {
         values.image &&  blogData.append('image',values.image)
         values.slug && blogData.append('slug',values.slug)
         
-        create({t:jwt.t}, blogData)
+        create({userid: uId, t:jwt.t}, blogData)
         .then((data) =>{
             if(data && data.error){
                setValues({...values, error:'Could not add new blog', redirect:false})
@@ -108,14 +117,22 @@ export default function CreateBlog(children) {
                             <br />
                             <input accept='image/*'  className='form-control'  onChange={handleChange('image')} id='icon-button-file'  type='file'  />
                             <br />
-                            <div>
                                 <Suspense>
-                                    <CustomToolbar/> 
-                                    <ReactQuill theme="snow" id='body' value={body} onChange={handleBody} formats={formats} modules={modules} />
+                            <div> 
+                                <CustomToolbar/> 
+                                <ReactQuill 
+                                    ref={(el) => {reactQuillRef = el }}
+                                    theme={'snow'}
+                                    id='body'
+                                    value={body} 
+                                    placeholder={'Write blog content here'}
+                                    onChange={handleBody}
+                                    formats={formats} 
+                                    modules={modules}  />
+                            </div>
                                 </Suspense>
                                 {/* <textarea id='body' className='form-control' cols='50' row='50' value={values.body} onChange={handleChange('body')}></textarea> */}
                             
-                            </div>
                             <br />
                             
                             <div className='form-group'>

@@ -1,19 +1,22 @@
-const colors = ["red","green","blue","orange","violet","green"]
+const colors = ["red","green","blue","orange","violet", "yellow"]
 const formats = [
     [
         {
             id:1,
             className:"ql-font",
-            options:['serif','monospace', 'arial', 'times new roman']
+            options:['arial', 'serif', 'monospace']
         },
         {
             id:2,
             className:"ql-size",
-            options:["small","large","huge"]
+            options:["normal","large","huge"]
         }
     ],
     [
-        {className:"ql-bold"},{className:"ql-italic"},{className:"ql-underline"},{className:"ql-strike"}
+        {className:"ql-bold"},
+        {className:"ql-italic"},
+        {className:"ql-underline"},
+        {className:"ql-strike"}
     ],
     [
         {

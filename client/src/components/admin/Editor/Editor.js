@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ReactQuill from 'react-quill'
-import CustomToolbar from './CustomToolbbar'
+import CustomToolbar from './CustomToolbar'
 import 'react-quill/dist/quill.snow.css'
 
 export const Editor = (props) => {

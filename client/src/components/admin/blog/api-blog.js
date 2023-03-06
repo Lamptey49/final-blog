@@ -1,9 +1,9 @@
 import axios from "axios"
 // import queryString from "query-string"
 // const queryString = require('query-string')
-const create = async ( credentials,  blog )=>{
+const create = async ( params, credentials,  blog )=>{
     try {
-        const response = await fetch('/api/new/blog', {
+        const response = await fetch('/api/new/blog'+params.userId, {
             method:'POST',
             headers: {
                 
@@ -32,10 +32,10 @@ const  list = async (params, signal)=> {
     }
 }
 
-const read = async( id, signal) => {
+const read = async( params, signal) => {
     try{
 
-        await fetch(`/api/blogs/${id}`, {
+        await fetch(`/api/blogs/${params.blogId}`, {
             method:'GET',
             headers:{
                 'Accept':'Content-Type',

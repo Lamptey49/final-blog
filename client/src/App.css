@@ -678,7 +678,7 @@
   }
   
   main .post-content .post-title a{
-    font-family: var(--Anton);
+    /* font-family: var(--Livvic); */
     font-size: 1.5rem;
   }
   

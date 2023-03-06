@@ -1,11 +1,11 @@
 import React from "react";
 import formats from './ToolbarOptions.js'
-
+import { v4 as uuidv4 } from 'uuid'
 const renderOptions = (formatData)=>{
     const {className,options} = formatData;
     return (
-        <select className = {className}>
-            <option selected="selected"></option>
+        <select defaultValue={''} onChange={(e) => e.persist()} className = {className}>
+            {/* <option selected ></option> */}
             {
                 options.map(value =>{
                     return (
@@ -36,7 +36,7 @@ const CustomToolbar = () => (
                     </span>
                 )
             })
-        }
+        }   
     </div>
   )
   export default CustomToolbar;

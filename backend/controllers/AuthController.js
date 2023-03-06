@@ -50,16 +50,14 @@ const authCtrl = {
     })
   },
   hasAuthorization : (req, res, next) => {
-    const authorized = req.auth._id && req.user._id
-    User.findById({_id: authorized}).exec((err, user)=>{
-     
-    if (err || !user) {
-      return res.status(403).json({
-        error: "User is not authorized"
-      })
-    }
-    next()
-  })
+    const authorized = req.profile && req.auth && 
+    req.profile._id == req.auth._id
+  if (!(authorized)) {
+    return res.status(403).json({
+      error: "User is not authorized"
+    })
+  }
+  next()
 },
   requireSignin : expressjwt({
     secret: config.jwtSecret,

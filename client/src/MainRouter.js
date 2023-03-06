@@ -6,16 +6,13 @@ import { Contact } from './components/core/Contact'
 import Signin from './components/Signin/Signin'
 import Signup from './components/Signup/Signup'
 import Blog from './components/Blogs/Blog'
-// import CreateBlog from './components/admin/blog/CreateBlog'
 import Dashboard from './components/admin/Dashboard'
-// import AdminBlogs from './components/admin/pages/Blogs/index'
 import { SinglePage } from './components/Blogs/SinglePage'
-import ProtectedRoute from './components/admin/ProtectedRoute'
 import CreateBlog from './components/admin/blog/CreateBlog'
 import AdminBlogs from './components/admin/pages/Blogs/AdminBlogs'
 import { EditBlog } from './components/admin/blog/EditBlog'
-import { DeleteBlog } from './components/admin/blog/DeleteBlog'
-
+import Account from './components/admin/Profile/Account'
+import { EditProfile } from './components/admin/Profile/EditProfile'
 export default function MainRouter() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   
@@ -46,6 +43,8 @@ export default function MainRouter() {
             </Route>
               <Route path='/admin/edit/blog/:id' element={<EditBlog />} />
               {/* <Route path='/admin/delete/blog/:id' element={<DeleteBlog />} /> */}
+              <Route path='/admin/profile' element={<Account />} />
+              <Route path='/user/edit/:id' element={<EditProfile />}/>
               <Route path='/admin/new/blog'  element={<CreateBlog />}/>
            
         </Routes>

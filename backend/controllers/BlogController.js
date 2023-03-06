@@ -19,7 +19,7 @@ const blogCtrl = {
                 postedBy:req.profile
             })
             const result = blog.save()
-            res.status(200).send({ success: true, msg:'Blog Published successfully', data:result})
+            res.status(200).send({ success: true, msg:'Blog Published successfully'})
         } catch(error){
             res.status(400).send({ success:false, msg:error.message})
         }
@@ -71,17 +71,8 @@ const blogCtrl = {
         }
     },
     read:async(req, res)=>{
-        const id = new mongoose.Types.ObjectId()
-        Blog.findById(req.params.id)
-        .select('id title body slug image  categories tags postedBy createdAt')
-        .exec((err, data) => {
-            if (err) {
-                return res.json({
-                    error: 'Could not retrieve blog'
-                });
-            }
-            res.json(data);
-        });
+        req.blog.image = undefined
+        return res.json(req.blog)
     },
     listCategories:async(req, res)=>{
         try {

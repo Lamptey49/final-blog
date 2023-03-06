@@ -39,9 +39,14 @@ const userSchema = new mongoose.Schema({
     admin:{
         type:Boolean,
         default:false
-    }
+    },
+    updated: Date,
+    created: {
+    type: Date,
+    default: Date.now
+  },
+
 },
-{timeStamp: true}
 )
 userSchema.virtual('password')
     .set(function(password){

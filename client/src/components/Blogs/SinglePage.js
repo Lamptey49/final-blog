@@ -7,10 +7,7 @@ import {RWebShare} from 'react-web-share'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faShare } from '@fortawesome/free-solid-svg-icons';
 import { useParams} from 'react-router-dom';
-import mainImage from '../../assets/images/scopaf.jpeg'
-import { read } from '../admin/blog/api-blog';
-import axios from 'axios'
-import { method } from 'lodash';
+import moment from 'moment/moment';
 import { PopularBlog } from './PopularBlog';
 
 export const SinglePage = () => {
@@ -45,27 +42,28 @@ export const SinglePage = () => {
                                 <img src={`/dist/uploads/${blog.image}`} className="img" alt={blog.title} />
                             </div>
                             <div className="post-info flex-row">
-                                <span><i className="fas fa-user text-gray"></i>&nbsp;&nbsp;{'Admin'}</span>
-                                <span><i className="fas fa-calendar-alt text-gray"></i>&nbsp;&nbsp;{new Date(blog.createdAt).toDateString()}</span>
+                                <span>{'Written by'}&nbsp;&nbsp;<i className="fas fa-user text-gray"></i>{(blog.postedBy)}</span>
+                                <span><i className="fas fa-calendar-alt text-gray"></i>&nbsp;&nbsp;{moment(blog.createdAt).fromNow()}</span>
                             
                             </div>
                         </div>
                         <div className="post-title">
                             <a href="/">{blog.title}</a>
-                            <p>{blog.body}
+                            <p className='ql-editor'>{blog.body}
                             </p>
-                        <div>
-                            <RWebShare
-                                data={{
-                                text:blog.slug,
-                                url: `/blogs/:${blog._id}`,
-                                title: blog.title,
-                                }}
-                                onClick={() => console.log("shared successfully!")}
-                            >
-                            <button className='btn btn-ouline'><FontAwesomeIcon icon={faShare} /></button>
+                        
+                            <div className='text-bold'>{'Share '}&nbsp;
+                                <RWebShare
+                                    data={{
+                                    text:blog.slug,
+                                    url: `/blogs/${blog._id}`,
+                                    title: blog.title,
+                                    }}
+                                    onClick={() => console.log("shared successfully!")}
+                                >
+                                <FontAwesomeIcon icon={faShare} className='fa-2x' />
                             </RWebShare>
-                        </div>
+                            </div>
                         </div>
                     </div>
                 </div>

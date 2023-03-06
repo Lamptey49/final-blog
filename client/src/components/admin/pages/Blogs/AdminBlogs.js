@@ -144,7 +144,7 @@ function AdminBlogs () {
                                         <td><span style={{fontSize:'1rem'}}>{new Date(blog.createdAt).toDateString()}</span></td>
                                         <td>
                                         
-                                    <a href={`/admin/edit/blog/${blog._id}}`} > <FontAwesomeIcon icon={faEdit} style={{color:'green', fontSize:'1.3rem'}}/></a> &nbsp;
+                                    <a href={`/admin/edit/blog/${blog._id}`} > <FontAwesomeIcon icon={faEdit} style={{color:'green', fontSize:'1.3rem'}}/></a> &nbsp;
                                     <button onClick={handleShow}> <FontAwesomeIcon icon={faTrash} style={{color:'red', borderStyle:'none', fontSize:'1.3rem'}}/></button> &nbsp;
                                         </td>
                                     </tr>
