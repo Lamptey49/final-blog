@@ -2,6 +2,12 @@ import React from 'react'
 // import PropTypes from 'prop-types'
 import parse from 'html-react-parser'
  const Blogs = (props) => {
+  const option = {
+   replace: (domNode) => {
+      if(domNode.attribs)
+       return <></>
+   }
+  }
   return (
     <div>
         {props.blog && props.blogs.length > 0 ? (
@@ -23,7 +29,7 @@ import parse from 'html-react-parser'
                               </div>
                               <div className="post-title">
                                   <a href="/">{blog.title}</a>
-                                  <p >{ parse(blog.body)}
+                                  <p >{ parse((blog.body), option)}
                                   </p>
                               
                               </div>
