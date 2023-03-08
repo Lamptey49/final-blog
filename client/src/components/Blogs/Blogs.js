@@ -1,5 +1,6 @@
 import React from 'react'
 // import PropTypes from 'prop-types'
+import ReactHtmlParser,  { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser'
  const Blogs = (props) => {
   return (
     <div>
@@ -22,7 +23,7 @@ import React from 'react'
                               </div>
                               <div className="post-title">
                                   <a href="/">{blog.title}</a>
-                                  <p >{ blog.body}
+                                  <p >{ ReactHtmlParser(blog.body)}
                                   </p>
                               
                               </div>
