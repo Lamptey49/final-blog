@@ -25,8 +25,7 @@ const auth = {
             sessionStorage.removeItem('jwt')
         signout().then((data) => {
             document.cookie = "t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-        })
-       
+        }) 
     },
     updateUser(user, cb) {
         if(typeof window !== "undefined"){
@@ -37,6 +36,7 @@ const auth = {
              cb()
            }
         }
+        
       }
 
 }

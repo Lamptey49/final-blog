@@ -4,17 +4,21 @@ import { Navigate } from 'react-router'
 import { Link, useParams } from 'react-router-dom'
 const ReactQuill = lazy(() => import('react-quill'))
 import CustomToolbar from '../Editor/CustomToolbar.js'
-import { useCookies } from 'react-cookie'
 import SideBar from '../Sidebar/Sidebar'
 import sidebar_menu from '../constants/sidebar-menu'
-import auth from '../../../auth/auth-helper'
 
 export default function CreateBlog() {
     
 
-    const params = useParams()
+    const {id} = useParams()
+    const getId = ()=> {
+        let id = sessionStorage.getItem('jwt')
+       return JSON.parse(id)
+       
+    }
+    
     let reactQuillRef = null
-    const [cookies ] = useCookies(['jwt'])
+    
     const [values, setValues] = useState({
         title:'',
         slug:'',
@@ -39,8 +43,7 @@ export default function CreateBlog() {
         'direction','align',
         'link','image','video','formula',
     ]
-    const jwt = cookies
-    const uId = auth.isAuthenticated()
+
     const handleChange = name => event => {
         const value = name === 'image'
           ? event.target.files[0]
@@ -57,7 +60,11 @@ export default function CreateBlog() {
        
         
     }
-
+    const setBlog = (blog, cb) => {
+        let details = localStorage.setItem('blog', JSON.stringify(blog))
+        return details;
+        cb()
+    }
     const clickSubmit = (e) => {
         e.preventDefault()
         let blogData = new FormData()
@@ -68,11 +75,16 @@ export default function CreateBlog() {
         values.image &&  blogData.append('image',values.image)
         values.slug && blogData.append('slug',values.slug)
         
-        create({userid: uId, t:jwt.t}, blogData)
+        create({
+            userId: getId().user._id
+            },
+            { t:getId().token},
+        blogData)
         .then((data) =>{
             if(data && data.error){
                setValues({...values, error:'Could not add new blog', redirect:false})
             } else{
+                
                 setValues({...values, redirect:true})
             }
         })

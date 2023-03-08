@@ -6,35 +6,43 @@ import CustomToolbar from '../Editor/CustomToolbar.js'
 import SideBar from '../Sidebar/Sidebar'
 import sidebar_menu from '../constants/sidebar-menu'
 import { useCookies } from 'react-cookie'
-
+import { Link } from 'react-router-dom'
 
 export const EditBlog = () => {
-    const [cookies] = useCookies(['jwt'])
-    const jwt = cookies
-    const {blogId} = useParams()
+    
+    const {id} = useParams()
     const [body, setBody]= useState('')
-    const [values, setValues] = useState({
-        title:'',
-        slug:'',
-        categories:'',
-        tags:'',
-        image:'',
-        error:'',
-        redirect:false
-    })
+    // const [values, setValues] = useState({
+    //     title:'',
+    //     slug:'',
+    //     categories:'',
+    //     tags:'',
+    //     image:'',
+    //     error:'',
+    //     redirect:false
+    // })
+    const [title, setTitle] = useState('')
+    const [slug, setSlug] = useState('')
+    const [categories, setCategories ]= useState('')
+    const [tags, setTags] = useState('')
+    const [error, setError] = useState('')
+    const [redirect, setRedirect] = useState(false)
+    const [image, setImage] = useState('')
    
     useEffect(() => {
         const abortController = new AbortController()
         const signal = abortController.signal
-        read({blogId:blogId}, signal).then((data)=>{
+        read({blogId: id}, signal).then((data)=>{
             if(data && data.error){
-                setValues({...values, error: data.error})
+                setError({ error: data.error})
             }
             else{
-                setValues({...values, id: data._id, 
-                    title: data.title, slug:data.slug, categories:data.categories,
-                     tags: data.tags, image:data.image})
-                     setBody({body: data.body})
+                setTitle(data.title)
+                setSlug({ slug: data && data.slug})
+                setTags({tags: data && data.tags})
+                setCategories({categories: data && data.categories})
+                setImage({image: data && data.image})
+                setBody({body: data && data.body})
             }
         })
         return function cleanup(){
@@ -45,8 +53,8 @@ export const EditBlog = () => {
         const value = name === 'image'
           ? event.target.files[0]
           : event.target.value
-        setValues({...values,  [name]: value })
-       
+        
+       console.log(value)
     }
     const getId = ()=> {
         let id = sessionStorage.getItem('jwt')
@@ -56,25 +64,36 @@ export const EditBlog = () => {
     const clickSubmit = (e) => {
         e.preventDefault()
         let blogData = new FormData()
-        values.title && blogData.append('title',values.title)
-        values.categories && blogData.append('categories',values.categories)
+        title && blogData.append('title',title)
+        categories && blogData.append('categories',categories)
         body && blogData.append('body',body)
-        values.tags && blogData.append('tags',values.tags)
-        values.image &&  blogData.append('image',values.image)
-        values.slug && blogData.append('slug',values.slug)
+        tags && blogData.append('tags',tags)
+        image &&  blogData.append('image',image)
+        slug && blogData.append('slug',slug)
 
-        update({blogId: blogId, userId: getId().user._id},{ t:getId().token}, blogData)
+        update({
+            blogId: id,
+            userId: getId().user._id},
+            { t:getId().token}, blogData)
         .then((data) =>{
             if(data && data.error){
-               setValues({...values, error:'Could not update blog', redirect:false})
+               setError(data.error)
+               setRedirect(false)
             } else{
-                setValues({...values, redirect:true})
+                setTitle({title: data.title})
+                setSlug({slug: data.slug})
+                setBody({body: data.body})
+                setCategories({categories: data.categories})
+                setTags({tags: data.tags})
+                setImage({image: data.image})
+                setRedirect(true)
             }
         })
     }
 
     const handleBody = (html) =>{
         setBody(html)
+        
     }
     
     const modules ={ toolbar :{
@@ -91,7 +110,7 @@ export const EditBlog = () => {
         'direction','align',
         'link','image','video','formula',
     ]
-    const { redirect } = values
+    // const { redirect } = values
     if(redirect == true){
         return (<Navigate to={'/admin'} />)
     }
@@ -102,45 +121,58 @@ export const EditBlog = () => {
                 <div className='dashboard-body'>
                     <div className='dashboard-content'>
                         <div className='dashboard-content-container'>
-                        <div className='dashboard-content'>
-                            <form>
+                        <div className='dashboard-content-header'>
                                 <h2 className='text-center'>Update Blog</h2>
+                        </div>
+                        <div>
+                                {error && (<div className='alert-error'>{error}</div>)}
                                 <div className='form-group'>
-                                    <input id='title' className='form-control me-2' placeholder='Title' onChange={handleChange('title')} value={values.title} /> 
+                                    <input id='title' className='form-control me-2'  placeholder='Title' onChange={(e)=>setTitle(e.target.value)} value={title} /> 
                                 </div>
                             <br />
                             <div className='form-group'>
-                                <input id='slug' className='form-control' placeholder='Slug' onChange={handleChange('slug')}  value={values.slug}  />
+
+                                <input id='slug' className='form-control'  placeholder='Slug' onChange={(e)=> setSlug(e.target.value)} value={slug}  />
                             </div>
                             <br />
-                            <input id='category' className='form-control' placeholder='Category' onChange={handleChange('categories')} value={values.categories}   />
+                            <input id='category' className='form-control'  placeholder='Category' onChange={(e)=> setCategories(e.target.value)} value={categories}   />
                             <br />
-                            <input id='tag' className='form-control' placeholder='Tag' value={values.tags} onChange={handleChange('tags')} />
+                            <input id='tag' className='form-control'  placeholder='Tags' onChange={(e)=> setTags(e.target.value)} value={tags} />
                             <br />
                             <label htmlFor='icon-button-file' style={{color:'red'}}>
-                                    Change Featured Image 
+                                    Add Featured Image 
                             </label>
                             <br />
-                            <input accept='image/*'  className='form-control' onChange={handleChange('image')} id='icon-button-file' type='file'  />
+                            <input accept='image/*'  className='form-control'  onChange={(e)=> setImage(e.target.files[0])} id='icon-button-file'  type='file'  />
                             <br />
-                        
-                            <div>
-                            <CustomToolbar />
-                            <ReactQuill theme="snow" value={body} onChange={handleBody} modules={modules} formats={formats} />;
-                             {/* <textarea className='form-control' cols='50' row='50' name='body' value={body} onChange={(e) => setBody(e.target.value)}></textarea> */}
-                            
+                                <Suspense>
+                            <div> 
+                                <CustomToolbar/> 
+                                <ReactQuill 
+                                    // ref={(el) => {reactQuillRef = el }}
+                                    theme={'snow'}
+                                    id='body'
+                                    value={body} 
+                                    placeholder={'Write blog content here'}
+                                    onChange={(e)=> setBody(e.target.value)}
+                                    formats={formats} 
+                                    modules={modules}  />
                             </div>
-                    
+                                </Suspense>
+                                {/* <textarea id='body' className='form-control' cols='50' row='50' value={values.body} onChange={handleChange('body')}></textarea> */}
+                            
                             <br />
                             
                             <div className='form-group'>
-                                    <button color='primary' className='btn btn-primary' type='submit' onClick={clickSubmit}>Publish</button>
+                                    <button color='primary' className='btn btn-primary' type='submit' onClick={clickSubmit} >Publish</button> &nbsp;
+                                    <Link to={'/admin'} className='btn btn-danger'>Cancel</Link>
                             </div>
                                 &nbsp;&nbsp;
-                            </form>
+                            </div>
+                        
                         </div>
                         </div>
-                    </div>
+                   
                 </div>
             </div>
         </>

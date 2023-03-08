@@ -1,9 +1,7 @@
 import Blog from '../models/BlogModel'
-import extend from 'lodash'
+import extend from 'lodash/extend'
 import errorHandler from '../helpers/dbErrorHandler'
-import fs from 'fs'
-import formidable from 'formidable'
-import mongoose from 'mongoose'
+
 
 const blogCtrl = {
     
@@ -19,7 +17,9 @@ const blogCtrl = {
                 postedBy:req.profile
             })
             const result = blog.save()
-            res.status(200).send({ success: true, msg:'Blog Published successfully'})
+            res.status(200).json({
+                message:'Blog added successfully'
+            })
         } catch(error){
             res.status(400).send({ success:false, msg:error.message})
         }
@@ -46,12 +46,12 @@ const blogCtrl = {
     blogByID:async(req, res, next, id)=>{
         try {
             let blog = await Blog.findById(id)
-            .populate('blog', 'id title slug body categories tags image createdAt').exec()
+            // .populate('user', '_id fullname').exec()
             if(!blog)
                 return res.status(400).json({
                     error:'Blog not found'
                 })
-            // req.blog = blog
+            req.blog = blog
             next()
         } catch (err) {
             return res.status(400).json({
@@ -71,7 +71,7 @@ const blogCtrl = {
         }
     },
     read:async(req, res)=>{
-        req.blog.image = undefined
+        // req.blog.image = image
         return res.json(req.blog)
     },
     listCategories:async(req, res)=>{
@@ -101,34 +101,24 @@ const blogCtrl = {
         }
     },
     update:async(req, res)=>{
-        let form = new formidable.IncomingForm()
-        form.keepExtensions = true 
-        form.parse(req, async(err, fields, files)=>{
-          if(err){
+       
+        try {
+            let blog = req.blog
+            blog = extend(blog)
+            blog.updated = Date.now()
+            blog.created = undefined
+            let result = await blog.save()
+            res.json(result)
+        } catch (err) {
             return res.status(400).json({
-              error:'Photo could not be uploaded'
+              error: err.message
             })
-          }
-          let blog = new Blog
-          blog = extend(blog, fields)
-          
-          if(files.photo){
-            blog.photo.data = fs.readFileSync(files.photo.path)
-            blog.photo.contentType = files.photo.type
-          }
-          try {
-            await blog.save()
-            res.json(blog)
-          } catch (err) {
-            return res.status(400).json({
-              error: errorHandler.getErrorMessage(err)
-            })
-          }
-        })
+        }
+       
     },
     remove: async(req, res)=>{
         try {
-            let blog = new Blog()
+            let blog = req.blog
             let deletedBlog = await blog.remove()
             res.json(deletedBlog)
           } catch (err) {

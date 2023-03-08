@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 import auth from '../../../auth/auth-helper'
 import { read, update } from '../../../auth/api-user'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import SideBar from '../Sidebar/Sidebar';
 import sidebar_menu from '../constants/sidebar-menu';
 
@@ -17,7 +17,7 @@ export const EditProfile = () => {
         redirectToProfile: false,
         error: ''
     })
-    
+    const { id } = useParams()
     const getId = ()=> {
         let id = sessionStorage.getItem('jwt')
        return JSON.parse(id)
@@ -42,12 +42,17 @@ export const EditProfile = () => {
   
     }, [])
   
+    const authUserDetails = (user, cb) => {
+      const authUser = JSON.parse(sessionStorage.getItem('jwt'))
+      authUser.user = user 
+      sessionStorage.setItem('jwt', JSON.stringify(authUser))
+      cb()
+    }
     const clickSubmit = () => {
       const userDetails = {
         fullname: values.fullname || undefined,
         email: values.email || undefined,
         password: values.password || undefined,
-        
       }
       update({
         userId: getId().user._id
@@ -57,9 +62,10 @@ export const EditProfile = () => {
         if (data && data.error) {
           setValues({...values, error: data.error})
         } else {
-          auth.updateUser(data, ()=>{
+          authUserDetails(data, ()=>{
             setValues({...values, userId: data._id, redirectToProfile: true})
           })
+           
         }
       })
     }

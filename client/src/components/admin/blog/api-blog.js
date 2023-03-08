@@ -1,12 +1,12 @@
-import axios from "axios"
+// import axios from "axios"
 // import queryString from "query-string"
 // const queryString = require('query-string')
 const create = async ( params, credentials,  blog )=>{
     try {
-        const response = await fetch('/api/new/blog'+params.userId, {
+        const response = await fetch('/api/new/blog/'+params.userId, {
             method:'POST',
             headers: {
-                
+                'Accept': 'application/json',
                 'Authorization': 'Bearer ' + credentials.t,
             },
             body: blog
@@ -35,7 +35,7 @@ const  list = async (params, signal)=> {
 const read = async( params, signal) => {
     try{
 
-        await fetch(`/api/blogs/${params.blogId}`, {
+        await fetch('/api/blogs/'+params.blogId, {
             method:'GET',
             headers:{
                 'Accept':'Content-Type',
@@ -53,20 +53,24 @@ const read = async( params, signal) => {
 }
 
 const listBlogs = async(signal) => {
-    await fetch('/api/blogs/by', {
+    let response = await fetch('/api/blogs/by', {
         method:'GET',
+        headers:{
+            'Accept':'application/json',
+            'Content-Type':'application/json'
+        }
         
-    }).then(response => {
-        return response.json()
     })
+    return response.json()
 }
 
 const update = async(params, credentials, blog) => {
     try {
-        let response = await fetch('/api/blog/'+params.blogId,{
+        let response = await fetch('/api/blog/'+params.blogId+'/'+params.userId,{
             method:'PUT',
             headers:{
                 'Accept':'application/json',
+                'Content-Type':'application/json',
                 'Authorization':'Bearer '+credentials.t
             },
             body:blog
@@ -78,11 +82,10 @@ const update = async(params, credentials, blog) => {
 }
 const remove = async(params, credentials)=>{
     try {
-        let response = await fetch('/api/blog/'+params.blogId, {
+        let response = await fetch(`/api/blogs/${params.id}/${params.userId}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + credentials.t
           }
         })
