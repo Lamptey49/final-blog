@@ -9,7 +9,7 @@ import {  faShare } from '@fortawesome/free-solid-svg-icons';
 import { useParams} from 'react-router-dom';
 import moment from 'moment/moment';
 import { PopularBlog } from './PopularBlog';
-import ReactHtmlParser , { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser'
+import parse from 'html-react-parser'
 export const SinglePage = () => {
 
     const [blog, setBlog] = useState([])
@@ -49,7 +49,7 @@ export const SinglePage = () => {
                         </div>
                         <div className="post-title">
                             <a href="/">{blog.title}</a>
-                            <p className='ql-editor'>{ ReactHtmlParser(blog.body)}
+                            <p className='ql-editor'>{ parse(blog.body)}
                             </p>
                         
                             <div className='text-bold'>{'Share this'}&nbsp;
