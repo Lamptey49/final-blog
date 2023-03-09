@@ -23,7 +23,7 @@ const blogSchema = new  mongoose.Schema({
     categories:{type:String},
     tags:{type: String},
     postedBy:{
-        type:ObjectId,
+        type:mongoose.Schema.ObjectId,
         ref:'User'
     },
     createdAt:{
@@ -35,7 +35,6 @@ const blogSchema = new  mongoose.Schema({
         default:Date.now
     }
 },
-    {timestamps: true}
 )
 
 export default mongoose.model('Blog', blogSchema)

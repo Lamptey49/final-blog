@@ -10,9 +10,10 @@ import { useParams} from 'react-router-dom';
 import moment from 'moment/moment';
 import { PopularBlog } from './PopularBlog';
 import parse from 'html-react-parser'
+import RelatedBlog from './RelatedBlog';
 export const SinglePage = () => {
 
-    const [blog, setBlog] = useState([])
+    const [blog, setBlog] = useState('')
     const {id} = useParams()
     
     let content = null
@@ -44,7 +45,6 @@ export const SinglePage = () => {
                             <div className="post-info flex-row">
                                 <span>{'Written by'}&nbsp;&nbsp;<i className="fas fa-user text-gray"></i>{(blog.postedBy)}</span>
                                 <span><i className="fas fa-calendar-alt text-gray"></i>&nbsp;&nbsp;{moment(blog.createdAt).fromNow()}</span>
-                            
                             </div>
                         </div>
                         <div className="post-title">
@@ -52,7 +52,7 @@ export const SinglePage = () => {
                             <p className='ql-editor'>{ parse(blog.body)}
                             </p>
                         
-                            <div className='text-bold'>{'Share this'}&nbsp;
+                            <p className='text-bold'>{'Share this'}&nbsp;</p>
                                 <RWebShare
                                     data={{
                                     text:blog.slug,
@@ -61,9 +61,9 @@ export const SinglePage = () => {
                                     }}
                                     onClick={() => console.log("shared successfully!")}
                                 >
-                                <FontAwesomeIcon icon={faShare} className='fa-2x' />
+                                <FontAwesomeIcon icon={faShare} className='fa-2x text-primary' />
                             </RWebShare>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -94,8 +94,10 @@ export const SinglePage = () => {
                             </ul>
                     </div>
                     <div className="popular-post">
-                        <h2>Popular Post</h2>
-                        <PopularBlog />
+                        <h2>Suggested Post</h2>
+                        <div className='card'>
+                            <RelatedBlog  />
+                        </div>
                     </div>
                 </aside>
             </div>

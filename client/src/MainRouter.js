@@ -36,8 +36,8 @@ export default function MainRouter() {
             <Route path='/contact' element={<Contact />} />
             <Route path='/auth/signin' element={<Signin/>} />
             <Route path='/user/signup' element={<Signup/>} />
-            <Route path='/blogs/:id' element={<SinglePage />} />
-            <Route path='/blog/:id' element={<Blog />} />
+            <Route path='/blogs/:id/:slug' element={<SinglePage />} />
+            <Route path='/blog/:id/slug' element={<Blog />} />
             {/**Admin Dashboard routes */}
             <Route path='/admin/'  element={<Dashboard />}>
               <Route path='blogs' element={<AdminBlogs />} />

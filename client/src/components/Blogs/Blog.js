@@ -54,7 +54,7 @@ const Blog = () => {
       <div>
         {blogs.map(blog =>(
           <div key={uuidv4()}>
-            <p><a href={`/blogs/${blog._id}`}>{blog.title}</a></p>
+            <p><a href={`/blogs/${blog._id}/${blog.slug}`}>{blog.title}</a></p>
           </div>
         ))}
       </div>

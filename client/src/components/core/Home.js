@@ -54,16 +54,18 @@ export default function Home() {
       </section>
       <section className="stats">
           <div className="container">
-              <div className="grid text-center my-4">
-              <p className="stats-heading text-center my-1">
-                One of the ways we achieve this is through this blog platform where we provide relevant and credible information that concerns stakeholders in the industry on the continent. 
-                This blog site is our flagship product among a collection of products and services designed and being rolled out to help elevate the state of African manufacturing and industry one SME at a time. 
-              </p>
-                   <Blog />  
+              <div className="text-center my-4">
+                <p className="stats-heading text-center my-1">
+                  One of the ways we achieve this is through this blog platform where we provide relevant and credible information that concerns stakeholders in the industry on the continent. 
+                  This blog site is our flagship product among a collection of products and services designed and being rolled out to help elevate the state of African manufacturing and industry one SME at a time. 
+                </p>
               </div>
               <div className='card'>
                 <PopularBlog />
               </div>    
+              <div className='grid grid-3'>
+              <Blog />  
+              </div>
           </div>
       </section>
       <Footer />

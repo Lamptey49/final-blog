@@ -64,6 +64,17 @@ const listBlogs = async(signal) => {
     return response.json()
 }
 
+const listRelated= async(signal)=>{
+    let response = await fetch('/api/blogs/related', {
+        method:'GET',
+        headers:{
+            'Accept':'application/json',
+            'Content-Type':'application/json'
+        }
+    })
+    return response.json()
+}
+
 const update = async(params, credentials, blog) => {
     try {
         let response = await fetch('/api/blog/'+params.blogId+'/'+params.userId,{
@@ -100,5 +111,6 @@ export {
     read,
     update,
     remove,
-    listBlogs
+    listBlogs,
+    listRelated
 }

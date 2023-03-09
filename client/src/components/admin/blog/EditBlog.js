@@ -35,9 +35,13 @@ export const EditBlog = () => {
         read({blogId: id}, signal).then((data)=>{
             if(data && data.error){
                 setError({ error: data.error})
+                setValues({...values, error: data.error})
             }
             else{
-                setTitle(data.title)
+                // setValues({...values, title: data && data.title, slug: data && data.slug,
+                //      tags: data && data.tags, categories: data && data.categories,
+                //       image: data && data.image })
+                setTitle({title: data && data.title})
                 setSlug({ slug: data && data.slug})
                 setTags({tags: data && data.tags})
                 setCategories({categories: data && data.categories})
@@ -64,12 +68,12 @@ export const EditBlog = () => {
     const clickSubmit = (e) => {
         e.preventDefault()
         let blogData = new FormData()
-        title && blogData.append('title',title)
-        categories && blogData.append('categories',categories)
-        body && blogData.append('body',body)
-        tags && blogData.append('tags',tags)
-        image &&  blogData.append('image',image)
-        slug && blogData.append('slug',slug)
+        values.title && blogData.append('title',values.title)
+        values.categories && blogData.append('categories',values.categories)
+        values.body && blogData.append('body',values.body)
+        values.tags && blogData.append('tags',values.tags)
+        values.image &&  blogData.append('image',values.image)
+        values.slug && blogData.append('slug',values.slug)
 
         update({
             blogId: id,
@@ -79,7 +83,11 @@ export const EditBlog = () => {
             if(data && data.error){
                setError(data.error)
                setRedirect(false)
+            // setValues({...values, error:data.error, redirect: true})
             } else{
+                // setValues({...values, title: data.title, slug: data.slug,
+                //     tags: data.tags, categories: data.categories,
+                //      image:data.image })
                 setTitle({title: data.title})
                 setSlug({slug: data.slug})
                 setBody({body: data.body})
@@ -93,6 +101,7 @@ export const EditBlog = () => {
 
     const handleBody = (html) =>{
         setBody(html)
+        console.log(html)
         
     }
     
@@ -132,10 +141,10 @@ export const EditBlog = () => {
                             <br />
                             <div className='form-group'>
 
-                                <input id='slug' className='form-control'  placeholder='Slug' onChange={(e)=> setSlug(e.target.value)} value={slug}  />
+                                <input id='slug' className='form-control'  placeholder='Slug' onChange={(e)=>setSlug(e.target.value)} value={slug}  />
                             </div>
                             <br />
-                            <input id='category' className='form-control'  placeholder='Category' onChange={(e)=> setCategories(e.target.value)} value={categories}   />
+                            <input id='category' className='form-control'  placeholder='Category' onChange={(e)=>setCategories(e.target.value)} value={categories}   />
                             <br />
                             <input id='tag' className='form-control'  placeholder='Tags' onChange={(e)=> setTags(e.target.value)} value={tags} />
                             <br />
@@ -143,18 +152,17 @@ export const EditBlog = () => {
                                     Add Featured Image 
                             </label>
                             <br />
-                            <input accept='image/*'  className='form-control'  onChange={(e)=> setImage(e.target.files[0])} id='icon-button-file'  type='file'  />
+                            <input accept='image/*'  className='form-control'  onChange={(e)=>setImage(e.target.files[0])} id='icon-button-file'  type='file'  />
                             <br />
                                 <Suspense>
                             <div> 
                                 <CustomToolbar/> 
                                 <ReactQuill 
-                                    // ref={(el) => {reactQuillRef = el }}
                                     theme={'snow'}
                                     id='body'
                                     value={body} 
                                     placeholder={'Write blog content here'}
-                                    onChange={(e)=> setBody(e.target.value)}
+                                    onChange={handleBody}
                                     formats={formats} 
                                     modules={modules}  />
                             </div>

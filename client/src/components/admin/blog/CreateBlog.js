@@ -52,19 +52,13 @@ export default function CreateBlog() {
        
     }
 
-    const handleBody = () =>{
-        const editor = reactQuillRef.getEditor()
-        const unprivilegedEditor = reactQuillRef.makeUnprivilegedEditor(editor)
-        const inpText = unprivilegedEditor.getText()
-        setBody(inpText)
+    const handleBody = (html) =>{
+        
+        setBody(html)
        
         
     }
-    const setBlog = (blog, cb) => {
-        let details = localStorage.setItem('blog', JSON.stringify(blog))
-        return details;
-        cb()
-    }
+    
     const clickSubmit = (e) => {
         e.preventDefault()
         let blogData = new FormData()
@@ -133,7 +127,7 @@ export default function CreateBlog() {
                             <div> 
                                 <CustomToolbar/> 
                                 <ReactQuill 
-                                    ref={(el) => {reactQuillRef = el }}
+                                   
                                     theme={'snow'}
                                     id='body'
                                     value={body} 

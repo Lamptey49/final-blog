@@ -40,7 +40,7 @@ export const PopularBlog = () => {
                             </div>
                         </div>
                         <div className="post-title">
-                            <a href={`/blogs/${b._id}`}>{b.title}</a>
+                            <a href={`/blogs/${b._id}/${b.slug}`}>{b.title}</a>
                         </div>
                         </div>
                             </div>

@@ -43,7 +43,7 @@ const blogCtrl = {
             error: errorHandler.getErrorMessage(err)
         }
     },
-    blogByID:async(req, res, next, id)=>{
+    blogByID: async(req, res, next, id)=>{
         try {
             let blog = await Blog.findById(id)
             // .populate('user', '_id fullname').exec()
@@ -61,8 +61,8 @@ const blogCtrl = {
     },
     listRelated: async(req, res)=>{
         try {
-            let blogs =await Blog.find({})
-                        .limit(5).populate('blog', '_id title image categories tags createdAt').exec()
+            let blogs = await Blog.find()
+                        .limit(1).exec()
             res.json(blogs)
         } catch (err) {
             return res.status(400).json({
