@@ -98,6 +98,10 @@ export const SinglePage = () => {
                         <div className='card'>
                             <RelatedBlog  />
                         </div>
+                        <h2>Popular Post</h2>
+                        <div className='card'>
+                            <PopularBlog />
+                        </div>
                     </div>
                 </aside>
             </div>

@@ -17,7 +17,7 @@ import parse from 'html-react-parser'
                                   </div>
                                   <div className="post-info flex-row">
                                       <span><i className="fas fa-user text-gray"></i>&nbsp;&nbsp;{(new Date(blog.createdAt).toDateString())}</span>
-                                      <span><i className="fas fa-calendar-alt text-gray"></i>&nbsp;&nbsp; {}</span>
+                                      <span><i className="fas fa-calendar-alt text-gray"></i>&nbsp;&nbsp; {blog.postedBy.fullname}</span>
                                   
                                   </div>
                               </div>

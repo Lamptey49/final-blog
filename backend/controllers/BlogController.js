@@ -26,7 +26,7 @@ const blogCtrl = {
     },
     listBlog: async(req, res)=>{
         try{
-            let blogs = await Blog.find().sort('-createdAt').exec()
+            let blogs = await Blog.find().sort('-createdAt').populate('postedBy', 'fullname').exec()
             res.json(blogs)
         } catch(err){
             return res.status(400).json({
