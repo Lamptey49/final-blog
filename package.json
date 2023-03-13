@@ -47,6 +47,7 @@
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.8.1",
+    "react-share": "^4.4.1",
     "react-web-share": "^2.0.2",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1"
