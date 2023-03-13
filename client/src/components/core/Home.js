@@ -3,31 +3,13 @@ import Footer from './Footer'
 import Header from './Header'
 import SingleBlog from './../Blogs/SingleBlog'
 import Blog from '../Blogs/Blog'
-import { listBlogs } from '../admin/blog/api-blog'
-import  RelatedBlog  from '../Blogs/RelatedBlog'
 import { PopularBlog } from '../Blogs/PopularBlog'
-// import ErrorBoundary from '../../ErrorBoundary'
-
 
 export default function Home() {
-  
-  const [blogs, setBlogs] = useState([])
-  // const [suggestionTitle, setSuggestionTitle] = useState('Related Post')
- 
-  useEffect(() => {
-    const abortController = new AbortController()
-    const signal = abortController.signal
-    listBlogs(signal).then((data) => {
-      if (data && data.error) {
-        console.log(data.error)
-      } else {
-        setBlogs(data)
-      }
-    })
-    return function cleanup(){
-      abortController.abort()
-    }
-  }, [])
+
+  useEffect(() =>{
+    document.title = 'Home | ScopAf'
+  })
   return (
 
     <div>
@@ -35,7 +17,7 @@ export default function Home() {
       <section className="showcase">
         <div className="container grid">
             <div className="showcase-text">
-                <h1>We Build what you ask for</h1>
+                {/* <h1>We Build what you ask for</h1> */}
                 <p>
                   Become the known global brand for credible,
                    relevant and educational information concerning 
@@ -43,31 +25,42 @@ export default function Home() {
                 </p>
                 
             </div>
-            <div className="showcase-form card">
+            <div className="showcase-form">
                 <h2>Latest Post</h2>
-                {/* <ErrorBoundary> */}
-
                   <SingleBlog />
-                {/* </ErrorBoundary> */}
+              
             </div>
         </div>
       </section>
-      <section className="stats">
-          <div className="container">
-              <div className="text-center my-4">
-                <p className="stats-heading text-center my-1">
-                  One of the ways we achieve this is through this blog platform where we provide relevant and credible information that concerns stakeholders in the industry on the continent. 
-                  This blog site is our flagship product among a collection of products and services designed and being rolled out to help elevate the state of African manufacturing and industry one SME at a time. 
-                </p>
-              </div>
-              <div className='card'>
-                <PopularBlog />
-              </div>    
-              <div className='grid grid-3'>
-              <Blog />  
-              </div>
-          </div>
+      <section className='stats'>
+        <div className='container'>
+        <p className="stats-heading md">
+           The Scopaf blog seeks to:</p>  <br />
+           <p className='sm'> - Be a source of credible and relevant information as it relates to the manufacturing industry in Africa. <br />
+            - Provide to African manufacturing MSMEs educational and relevant content that enhances their business and personal wellbeing. <br />
+            - Contribute as much as possible to the elevation of the African manufacturing industry using the tool of ICT. <br />
+            </p>
+        </div>
       </section>
+      <div className='stats'>
+        <div className='container'>
+          <h1>Recommended</h1>
+          <hr />
+          <div>
+            <PopularBlog />
+          </div>
+          {/* <div className='card'>
+            <PopularBlog />
+          </div> */}
+        </div>
+      </div>
+      <div className='stats'>
+        <div className='container'>
+          <h1>All Post</h1>
+          <Blog />
+        </div>
+      </div>
+     
       <Footer />
     </div>
   )

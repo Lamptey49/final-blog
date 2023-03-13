@@ -2,25 +2,24 @@ import React, {useState, useEffect} from 'react';
 import {calculateRange, sliceData} from '../../utils/table-pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faTrash, faEdit} from '@fortawesome/free-solid-svg-icons'
-import { listBlogs,} from '../../blog/api-blog'
+import { listBlogs} from '../../blog/api-blog'
 import { Link, useParams} from 'react-router-dom'
 import { DeleteBlog } from '../../blog/DeleteBlog';
-import PropTypes from 'prop-types'
+import Footer from '../../../core/Footer'
+
 function AdminBlogs (props) {
     const [search, setSearch] = useState('');
-    // const [orders, setOrders] = useState(all_orders);
     let all_blogs = []
     const [page, setPage] = useState(1);
     const [pagination, setPagination] = useState([]);
-    const [blogs, setBlogs] = useState(all_blogs)
+    const [blogs, setBlogs] = useState('')
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
+        document.title = 'Admin'
         const signal = new AbortController()
         const abortController = signal 
-
         listBlogs(signal)
-        // .then((respone) => {return respone.json()})
         .then((data) =>{
             if(data && data.error){
                 console.log(data.error)
@@ -37,7 +36,6 @@ function AdminBlogs (props) {
         setPagination(calculateRange(all_blogs, 10));
         setBlogs(sliceData(all_blogs, page, 10));
     }, [page]);
-
     // Search
     const __handleSearch = (event) => {
         setSearch(event.target.value);
@@ -66,19 +64,20 @@ function AdminBlogs (props) {
         return JSON.parse(jwt)
     }
 
-      const { id } = useParams()
+    const handleRequestClose = () => {
+    setOpen(false)
+    }
+    
+    const removeBlog = (blog) =>{
+        const updatedBlogs = [...blogs]
+        const index = updatedBlogs.indexOf(blog)
+        updatedBlogs.splice(index, 1)
+        setBlogs(updatedBlogs)
+    }
 
-      const handleRequestClose = () => {
-        setOpen(false)
-        }
-
-        const removeBlog = (blog) =>{
-            const updatedBlogs = [...blogs]
-            const index = updatedBlogs.indexOf(blog)
-            updatedBlogs.splice(index, 1)
-            setBlogs(updatedBlogs)
-        }
     return(
+        <>
+        {props.title}
             <div className='dashboard-content'>
                 <div className='dashboard-content-container'>
                     <div className='dashboard-content-header'>
@@ -97,39 +96,40 @@ function AdminBlogs (props) {
                     
                         <thead>
                             <th>TITLE</th>
-                            <th>DESC</th>
                             <th>PUBLISHED ON</th>
+                            <th>UPDATED ON</th>
                             <th>ACTIONS</th>
                         </thead>
                         <tbody>
                         {blogs && blogs.map((blog, index) => (
                             <tr key={index}>
-                                <td><span style={{fontSize:'1rem'}}>{(blog.title).substring(0, 25)}...</span></td>
-                                <td><span style={{fontSize:'1rem'}}>{(blog.body).substring(0, 20)}...</span></td>
+                                <td><span style={{fontSize:'1rem'}}>{(blog.title).substring(0, 30)}...</span></td>
                                 <td><span style={{fontSize:'1rem'}}>{new Date(blog.createdAt).toDateString()}</span></td>
+                                <td><span style={{fontSize:'1rem'}}>{new Date(blog.updatedAt).toDateString()}</span></td>
                                 <td>
                                 
                             <Link to={`/admin/edit/blog/${blog._id}`} > 
                                 <FontAwesomeIcon icon={faEdit} style={{color:'green', fontSize:'1.3rem'}}/>
                             </Link> &nbsp;
-                            <Link state={{blogId:blog._id}} onClick={()=>{ handleShow()}} > 
+                            <Link onClick={()=>{ handleShow()}} > 
                                 <FontAwesomeIcon icon={faTrash} style={{color:'red',  fontSize:'1.3rem'}}/>
                             </Link> &nbsp;
                             
+                                <DeleteBlog
+                                blog={blog}
+                                open={open} 
+                                blogId={blog._id} 
+                                onRemove={removeBlog}
+                                userId={getToken().user._id} 
+                                token={getToken().token} 
+                                handleRequestClose={handleRequestClose} />
                                 </td>
                             </tr>
                         ))
                         
                      }
                         </tbody>    
-                        <DeleteBlog
-                                
-                                open={open} 
-                                blogId={id} 
-                                onRemove={removeBlog}
-                                userId={getToken().user._id} 
-                                token={getToken().token} 
-                                handleRequestClose={handleRequestClose} />
+                        
                     </table>
                         
 
@@ -151,6 +151,8 @@ function AdminBlogs (props) {
                     }
                 </div>
             </div>
+            <Footer />
+        </>
        
     )
 }

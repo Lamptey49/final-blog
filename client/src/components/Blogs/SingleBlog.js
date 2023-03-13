@@ -33,7 +33,7 @@ const SingleBlog = ({navigation}) => {
         <div>
         {/**/}
             {blog.length > 0 && (
-                <div>
+                <div className='card'>
                     {blog.map((b, _id) => (
                         <div key={_id}>
                                 <div key={uuidv4()}>

@@ -38,7 +38,7 @@ const read = async( params, signal) => {
         await fetch('/api/blogs/'+params.blogId, {
             method:'GET',
             headers:{
-                'Accept':'Content-Type',
+                'Accept':'application/json',
                 'Content-Type':'application/json'
             },
             signal:signal
@@ -93,7 +93,7 @@ const update = async(params, credentials, blog) => {
 }
 const remove = async(params, credentials)=>{
     try {
-        let response = await fetch(`/api/blogs/${params.id}/${params.userId}`, {
+        let response = await fetch(`/api/blogs/${params.blogId}/${params.userId}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',

@@ -104,7 +104,7 @@ const blogCtrl = {
        
         try {
             let blog = req.blog
-            blog = extend(blog)
+            blog = extend(blog, req.body)
             blog.updated = Date.now()
             blog.created = undefined
             let result = await blog.save()

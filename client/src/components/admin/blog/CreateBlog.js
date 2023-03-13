@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense  } from 'react'
+import React, { useState, lazy, Suspense, useEffect  } from 'react'
 import { create } from './api-blog'
 import { Navigate } from 'react-router'
 import { Link, useParams } from 'react-router-dom'
@@ -6,9 +6,12 @@ const ReactQuill = lazy(() => import('react-quill'))
 import CustomToolbar from '../Editor/CustomToolbar.js'
 import SideBar from '../Sidebar/Sidebar'
 import sidebar_menu from '../constants/sidebar-menu'
-
+import Footer from '../../core/Footer'
 export default function CreateBlog() {
     
+    useEffect(() => {
+        document.title = 'Add new post | Admin'
+    })
 
     const {id} = useParams()
     const getId = ()=> {
@@ -49,14 +52,10 @@ export default function CreateBlog() {
           ? event.target.files[0]
           : event.target.value
         setValues({...values,  [name]: value })
-       
     }
 
-    const handleBody = (html) =>{
-        
+    const handleBody = (html) =>{  
         setBody(html)
-       
-        
     }
     
     const clickSubmit = (e) => {
@@ -152,6 +151,7 @@ export default function CreateBlog() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
   )
 }

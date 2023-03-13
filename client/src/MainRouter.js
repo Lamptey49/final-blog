@@ -14,7 +14,8 @@ import { EditBlog } from './components/admin/blog/EditBlog'
 import {DeleteBlog} from './components/admin/blog/DeleteBlog'
 import Account from './components/admin/Profile/Account'
 import { EditProfile } from './components/admin/Profile/EditProfile'
-export default function MainRouter() {
+import PageNotFound from './components/PageNotFound'
+export default function MainRouter(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   
   const checkUserToken = () => {
@@ -30,7 +31,7 @@ export default function MainRouter() {
   }, [isLoggedIn])
   return (
     <>
-           
+          
         <Routes>
             <Route path='/' element={<Home/>} />
             <Route path='/contact' element={<Contact />} />
@@ -38,9 +39,10 @@ export default function MainRouter() {
             <Route path='/user/signup' element={<Signup/>} />
             <Route path='/blogs/:id/:slug' element={<SinglePage />} />
             <Route path='/blog/:id/slug' element={<Blog />} />
+            <Route path='*' element={<PageNotFound />} />
             {/**Admin Dashboard routes */}
-            <Route path='/admin/'  element={<Dashboard />}>
-              <Route path='blogs' element={<AdminBlogs />} />
+            <Route path='/admin/'  element={<Dashboard title={'Dashboard'} />}>
+              <Route path='blogs' element={<AdminBlogs title='Admin' />} />
             </Route>
               <Route path='/admin/edit/blog/:id' element={<EditBlog />} />
               <Route path='/api/blog/:blog_id/:user_id' element={<DeleteBlog />} />

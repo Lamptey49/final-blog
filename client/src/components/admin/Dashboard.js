@@ -3,8 +3,8 @@ import auth from '../../auth/auth-helper'
 import Sidebar from './Sidebar/Sidebar'
 import sidebar_menu from './constants/sidebar-menu'
 import AdminBlogs from './pages/Blogs/AdminBlogs'
-
-export default function Dashboard() {
+import PropTypes from 'prop-types'
+export default function Dashboard(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   
   const checkUserToken = () => {
@@ -21,25 +21,18 @@ export default function Dashboard() {
 
   return (
     <React.Fragment>
- 
+      
     <div className='dashboard-container'>
         <Sidebar  menu={sidebar_menu}/>
       <div className='dashboard-body'>
-        <div className=' grid-3' style={{display:'flex'}}>
-          <div className='card'>
-            <h2>Total Blogs</h2>
-          </div>
-          <div className='card'>
-            <h2>Total Users</h2>
-          </div>
-          <div className='card'>
-            <h2>Total Blogs Published</h2>
-          </div>
-        </div>
+        
         <AdminBlogs />
       </div>
     </div>
     </React.Fragment>
     
   )
+}
+Dashboard.propTypes = {
+  title: PropTypes.string.isRequired
 }

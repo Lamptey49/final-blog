@@ -15,8 +15,8 @@ export const DeleteBlog = (props) => {
         if(data && data.error){
             console.log(data.error)
         } else {
-            setShow(false)
-            props.onRemove(blogs)
+            setOpen(false)
+            props.onRemove(props.blog)
         }
     })
   }
@@ -33,7 +33,7 @@ export const DeleteBlog = (props) => {
           <Modal.Title>Delete Blog</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            Confirm to delete your blog 
+            Confirm to delete your blog {props.blog.title}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={props.handleRequestClose}>

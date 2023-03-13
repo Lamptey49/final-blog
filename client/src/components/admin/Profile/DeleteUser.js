@@ -36,7 +36,7 @@ export default function DeleteUser(props) {
           Delete
         </Button>
   
-        <Modal open={open} onClose={handleRequestClose}>
+        <Modal open={props.open} onClose={handleRequestClose}>
           <ModalTitle>{"Delete Account"}</ModalTitle>
           <ModalBody>
               Confirm to delete your account.

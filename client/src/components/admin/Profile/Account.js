@@ -6,6 +6,7 @@ import { faEdit, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useCookies } from 'react-cookie';
 import SideBar from '../Sidebar/Sidebar';
 import sidebar_menu from '../constants/sidebar-menu';
+import Footer from '../../core/Footer';
 
 const Account = () => {
    
@@ -13,8 +14,11 @@ const Account = () => {
     const {userId} = useParams()
     const [user, setUser] = useState({})
     const [redirectToSignin, setRedirectToSignin] = useState(false)
-    const cookies = useCookies(['jwt'])
-    const jwt = cookies
+    const [open, setOpen] = useState(false)
+
+    const clickButton = () => {
+        setOpen(true)
+      }
 
     const getId = ()=> {
         let id = sessionStorage.getItem('jwt')
@@ -22,7 +26,7 @@ const Account = () => {
        
     }
     useEffect(() => {
-        
+        document.title = 'Account Profile'
         fetch(`/api/users/${getId().user._id}`,{
             method:'GET',
             headers:{
@@ -70,7 +74,7 @@ const Account = () => {
                                         <div><Link to={'/user/edit/'+user._id}>
                                             <FontAwesomeIcon icon={faEdit} className='fa-2x'/>
                                         </Link> &nbsp;&nbsp;
-                                        <DeleteUser userId={user._id} />
+                                        <DeleteUser userId={user._id} open={open} onClick={clickButton} />
                                         </div>
                                             )
                                         }
@@ -86,6 +90,7 @@ const Account = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </React.Fragment>
     );
 };
