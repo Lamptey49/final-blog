@@ -76,7 +76,7 @@ const blogCtrl = {
     },
     listCategories:async(req, res)=>{
         try {
-            let blogs = await Blog.distinct('category', {})
+            let blogs = await Blog.find().distinct('category', {})
             re.json(blogs)
         } catch (err) {
             return res.status(400).json({

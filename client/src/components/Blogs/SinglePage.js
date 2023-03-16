@@ -38,7 +38,7 @@ export const SinglePage = () => {
         .then((response)=>{ return response.json()})
         .then(data => {
             setBlog(data) 
-            document.title = data.title + '- ScopAf'
+            document.title = data.title + ' - ScopAf'
         })
         return function cleanup(){
             abortController.abort()
@@ -59,7 +59,7 @@ export const SinglePage = () => {
                                     <img src={`/dist/uploads/${blog.image}`} className="img" alt={blog.title} />
                                 </div>
                                 <div className="post-info flex-row">
-                                    <span>{'Written by'}&nbsp;&nbsp;<i className="fas fa-user text-gray"></i>{(blog.postedBy)}</span>
+                                    <span>{'Written by '}&nbsp;&nbsp;<i className="fas fa-user text-gray"></i>{(blog.postedBy.fullname)}</span>
                                     <span><i className="fas fa-calendar-alt text-gray"></i>&nbsp;&nbsp;{moment(blog.createdAt).fromNow()}</span>
                                 </div>
                             </div>
@@ -68,32 +68,32 @@ export const SinglePage = () => {
                                 <p className='ql-editor'>{ parse(blog.body)}
                                 </p>
                             </div>
-                                <p className='text-bold'>{'Share this page'}&nbsp;</p>
+                                <p className='text-bold'>{'Share this article'}&nbsp;</p>
                                 <FacebookShareButton
                                     title={blog.title}
                                     quote={blog.tags | blog.categories}
-                                    url={`/blogs/${blog._id}/${blog.slug}`} 
+                                    url={`https://scopaf.herokuapp.com/blogs/${blog._id}/${blog.slug}`} 
                                 >
                                 <FacebookIcon size={32} round />
                                 </FacebookShareButton>&nbsp;
                                 <TwitterShareButton 
                                     title={blog.title}
                                     quote={blog.tags | blog.categories}
-                                    url={`/blogs/${blog._id}/${blog.slug}`} 
+                                    url={`https://scopaf.herokuapp.com/blogs/${blog._id}/${blog.slug}`} 
                                 >
                                     <TwitterIcon size={32} round />
                                 </TwitterShareButton>&nbsp;
                                 <WhatsappShareButton 
                                 title={blog.title}
                                 quote={blog.tags | blog.categories}
-                                url={`/blogs/${blog._id}/${blog.slug}`} >
+                                url={`https://scopaf.herokuapp.com/blogs/${blog._id}/${blog.slug}`} >
                                     <WhatsappIcon size={32}  round />
                                 </WhatsappShareButton>&nbsp;
                                 <EmailShareButton
                                     
                                     subject={blog.title}
                                     quote={blog.tags | blog.categories}
-                                    url={`/blogs/${blog._id}/${blog.slug}`} 
+                                    url={`https://scopaf.herokuapp.com/blogs/${blog._id}/${blog.slug}`} 
                                     body={blog.body}>
                                         <EmailIcon round  size={32}/>
                                 </EmailShareButton> &nbsp;
@@ -117,7 +117,7 @@ export const SinglePage = () => {
                                         <span>(05)</span>
                                     </li>
                                     <li className="list-items" data-aos="fade-left" data-aos-delay="200">
-                                        <a href="/">Techonlogy</a>
+                                        <a href="/">Technology</a>
                                         <span>(02)</span>
                                     </li>
                                     <li className="list-items" data-aos="fade-left" data-aos-delay="300">
